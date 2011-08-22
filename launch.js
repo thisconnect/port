@@ -3,7 +3,7 @@ var net = require('net');
 // http://nodejs.org/docs/v0.5.2/api/net.html
 
 var server = net.createServer(function(socket){
-	socket.end('goodbye\n');
+	socket.end('goodbye;\n');
 });
 
 // http://nodejs.org/docs/v0.5.2/api/streams.html#readable_Stream
