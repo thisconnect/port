@@ -12,7 +12,6 @@ server.listen(4542, 'localhost', function(){
 	var address = server.address();
 	//console.log('opened server on %j', address);
 	
-	console.log('please open base.pd manually');
 });
 
 server.on('connection', function(socket){

@@ -1,0 +1,6 @@
+[submodule "support/pddom"]
+	path = support/pddom
+	url = git://github.com/thisconnect/pddom.git
+[submodule "support/pdsocket"]
+	path = support/pdsocket
+	url = git://github.com/thisconnect/pdsocket.git

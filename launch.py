@@ -1,6 +1,6 @@
 #import PdSocket, Puredata
-from pdsocket import PdSocket
-from pdsocket import Puredata
+from support.pdsocket import PdSocket
+from support.pdsocket import Puredata
 import os
 
 
