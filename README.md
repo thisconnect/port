@@ -12,7 +12,7 @@ Run
 Setup
 -----
 
-  git submodule update --init --recursive
+	git submodule update --init --recursive
 
 Todo
 ----
