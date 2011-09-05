@@ -14,6 +14,11 @@ Setup
 
 	git submodule update --init --recursive
 
+Requires
+--------
+  - [Pd](http://crca.ucsd.edu/~msp/software.html)
+  - node.js or python
+
 Todo
 ----
 

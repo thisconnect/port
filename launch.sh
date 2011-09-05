@@ -1,2 +1,2 @@
 open base.pd
-node pdsocket.node.js
+node support/pdsocket.node.js

@@ -25,7 +25,7 @@ def log(self, data):
 r.addEvent('receive', log)
 
 
-pd = Puredata.Puredata()
+pd = Puredata.Puredata(pd = '//Applications/Pd-0.43-0.app/Contents/Resources/bin/pd')
 pd.prepare(dir = os.getcwd() + '/', file = 'base.pd')
 pd.start()
 
