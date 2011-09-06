@@ -1,0 +1,16 @@
+{
+	"name": "counter",
+	"label": "Counter",
+	"controllers": [{
+		"name": "increment",
+		"label": "Increment",
+		"type": "int",
+		"value": 1
+	}, {
+		"name": "modulus",
+		"label": "Modulus",
+		"type": "int",
+		"range": [0, 10000],
+		"value": 16
+	}]
+}

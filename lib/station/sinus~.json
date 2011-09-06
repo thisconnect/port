@@ -1,0 +1,16 @@
+{
+	"name": "sinus~",
+	"label": "Sinus~",
+	"controllers": [{
+		"name": "frequency",
+		"label": "Frequency",
+		"type": "float",
+		"value": 440
+	}, {
+		"name": "level",
+		"label": "Level",
+		"type": "float",
+		"range": [0, 1],
+		"value": 1
+	}]
+}

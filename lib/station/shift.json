@@ -1,0 +1,11 @@
+{
+	"name": "shift",
+	"label": "Shift",
+	"controllers": [{
+		"name": "delay",
+		"label": "Delay (ms)",
+		"type": "int",
+		"range": [0, 2000],
+		"value": 200
+	}]
+}
