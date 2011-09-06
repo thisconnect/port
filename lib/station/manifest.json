@@ -1,6 +1,8 @@
 [
 	"counter.json",
+	"envelope~.json",
 	"memory.json",
 	"pulse.json",
-	"shift.json"
+	"shift.json",
+	"sinus~.json"
 ]
