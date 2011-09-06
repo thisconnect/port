@@ -1,5 +1,5 @@
-Satellite
-=========
+Station
+=======
 
 Runs an audio engine and provides a socket connection to pass and receive data.
 
@@ -17,7 +17,7 @@ Setup
 Requires
 --------
   - [Pd](http://crca.ucsd.edu/~msp/software.html)
-  - node.js or python
+  - [node.js](http://nodejs.org/) or [python](http://www.python.org/)
 
 Todo
 ----
