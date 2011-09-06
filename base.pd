@@ -1,29 +1,44 @@
-#N canvas 96 22 611 469 10;
-#X declare -path support/pddom/ -path support/pdsocket/;
+#N canvas 57 53 615 511 10;
+#X declare -path lib/station -path support/pddom/ -path support/pdsocket/
+;
 #X text 55 45 Space;
-#X obj 55 315 pd-dom space;
-#X obj 55 355 dac~;
-#X msg 222 325 delete 0;
-#X msg 222 265 set 0 blib~;
-#X obj 135 275 s space;
-#X obj 55 245 route space;
-#X msg 222 295 vis 0;
+#X obj 55 435 pd-dom space;
+#X obj 55 475 dac~;
+#X obj 125 315 s space;
+#X obj 55 285 route space;
 #X obj 437 115 del 0;
 #X obj 437 75 loadbang;
-#X obj 55 155 pysocket 4541 4542;
-#X msg 67 118 send asdf;
+#X obj 55 175 pysocket 4541 4542;
+#X msg 55 145 send asdf;
 #X msg 437 155 \; pd dsp 1 \, dsp 0;
-#X obj 75 195 print incoming;
-#X obj 55 75 declare -path support/pddom/ -path support/pdsocket/;
+#X obj 75 205 print incoming;
+#X msg 222 328 chain pulse counter memory sinus~ envelope~;
+#X msg 222 375 vis \$1;
+#X obj 222 355 hradio 15 1 0 8 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X obj 497 215 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 437 215 r space;
+#X obj 437 245 spigot;
+#X obj 437 275 print verbose;
+#X msg 222 405 reset;
+#X msg 278 412 \; space reset \; space chain pulse counter memory sinus~
+envelope~ \; space.0 speed 123;
+#X obj 55 75 declare -path lib/station -path support/pddom/ -path support/pdsocket/
+;
 #X connect 1 0 2 0;
 #X connect 1 0 2 1;
-#X connect 3 0 1 1;
 #X connect 4 0 1 1;
-#X connect 6 0 1 1;
-#X connect 6 1 5 0;
-#X connect 7 0 1 1;
-#X connect 8 0 12 0;
-#X connect 9 0 8 0;
-#X connect 10 0 13 0;
-#X connect 10 0 6 0;
-#X connect 11 0 10 0;
+#X connect 4 1 3 0;
+#X connect 5 0 9 0;
+#X connect 6 0 5 0;
+#X connect 7 0 10 0;
+#X connect 7 0 4 0;
+#X connect 8 0 7 0;
+#X connect 11 0 1 1;
+#X connect 12 0 1 1;
+#X connect 13 0 12 0;
+#X connect 14 0 16 1;
+#X connect 15 0 16 0;
+#X connect 16 0 17 0;
+#X connect 18 0 1 1;
