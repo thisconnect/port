@@ -1,6 +1,6 @@
 #!/bin/bash
 
-node support/pdsocket.node.js & nodepid = $!
+node support/pdsocket.node.js & nodepid=$!
 
 case $OSTYPE in
     'linux-gnu')
