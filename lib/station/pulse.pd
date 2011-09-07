@@ -5,7 +5,7 @@
 #X msg 110 161 stop;
 #X obj 76 114 sel 1 0;
 #X obj 157 161 max 1;
-#X obj 36 74 route bang run float stop;
+#X obj 36 74 route bang run float speed stop;
 #X connect 0 0 6 0;
 #X connect 2 0 1 0;
 #X connect 3 0 2 0;
@@ -16,5 +16,6 @@
 #X connect 6 0 2 0;
 #X connect 6 1 2 0;
 #X connect 6 2 4 0;
-#X connect 6 3 3 0;
-#X connect 6 4 1 0;
+#X connect 6 3 4 0;
+#X connect 6 4 3 0;
+#X connect 6 5 1 0;
