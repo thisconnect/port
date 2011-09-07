@@ -1,12 +1,15 @@
 #!/bin/bash
 
+node support/pdsocket.node.js & nodepid = $!
+
 case $OSTYPE in
     'linux-gnu')
-		pd base.pd
+		pd ./base.pd
 		;;
     'darwin10.0')
-		open base.pd
+		# open ./base.pd
+		/Applications/Pd-0.*.app/Contents/Resources/bin/pd ./base.pd
 		;;
 esac
 
-node support/pdsocket.node.js
+# kill $nodepid 2> /dev/null
