@@ -27,7 +27,7 @@ server.on('connection', function(socket){
 	
 	pdsocket.on('connect', function(){
 		//console.log('pdsocket connect');
-		pdsocket.write('lalallaal lalalal;\n');
+		pdsocket.write('hi pd! this is a fudi message ;\n');
 	});
 	
 	socket.setEncoding('ascii'); // 'utf8', 'base64'
