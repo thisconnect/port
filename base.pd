@@ -13,7 +13,7 @@
 #X obj 75 205 print incoming;
 #X msg 235 552 vis \$1;
 #X obj 235 532 hradio 15 1 0 12 empty empty empty 0 -8 0 10 -262144
--1 -1 9;
+-1 -1 0;
 #X obj 295 355 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 235 355 r space;
@@ -25,14 +25,14 @@
 #X msg 55 145 send some data back;
 #X msg 235 505 add delay~;
 #X msg 235 465 \; space.to run 0;
-#X msg 442 75 \; space reset \; space chain pulse counter memory memory
-sinus~ envelope~ \; space.1 modulus 9 \; space.2 data 0 1 2 3 1 2 3
-1 0 3 \; space.3 data 0 0 369.994 523.251 698.456 \; space.4 level
-0.07 \; space.5 attack 20 \, decay 250 \; space.0 interval 255 \, run
-1 \; space chain pulse counter memory sinus~ envelope~ \; space.1 modulus
-9 \; space.8 data 0 1 2 3 1 2 3 1 0 3 \; space.9 level 0.09 \; space.6
-interval 260 \, run 1 \; pd dsp 1;
 #X msg 442 307 64 66 71 73 74 66 64 73 71 66 74 73;
+#X msg 442 75 \; space reset \; space chain pulse counter memory memory
+sinus~ envelope~ \; space.1 modulus 9 \; space.2 data 0 1 2 3 0 1 2
+3 1 3 \; space.3 data 0 0 369.994 523.251 698.456 \; space.4 level
+0.17 \; space.5 attack 20 \, decay 250 \; space.0 interval 330 \, run
+1 \; space chain pulse counter memory sinus~ envelope~ \; space.7 modulus
+9 \; space.8 data 0 1 2 3 0 1 2 3 1 3 \; space.9 level 0.19 \; space.6
+interval 350 \, run 1 \; pd dsp 1;
 #X connect 1 0 2 0;
 #X connect 1 0 2 1;
 #X connect 4 0 1 1;
