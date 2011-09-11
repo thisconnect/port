@@ -6,13 +6,13 @@
 		"label": "Attack",
 		"type": "int",
 		"range": [1, 800],
-		"value": 40
+		"value": 12
 	}, {
 		"name": "decay",
 		"label": "Decay",
 		"type": "int",
 		"range": [1, 1200],
-		"value": 120
+		"value": 200
 	}, {
 		"name": "level",
 		"label": "Level",
