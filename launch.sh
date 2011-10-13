@@ -12,4 +12,4 @@ case $OSTYPE in
 		;;
 esac
 
-# kill $nodepid 2> /dev/null
+kill $nodepid 2> /dev/null
