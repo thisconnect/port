@@ -16,3 +16,6 @@
 [submodule "node_modules/socket.io-client"]
 	path = node_modules/socket.io-client
 	url = git://github.com/thisconnect/socket.io-client.git
+[submodule "support/mine"]
+	path = support/mine
+	url = git://github.com/thisconnect/mine.git
