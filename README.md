@@ -6,8 +6,7 @@ Runs an audio engine and provides a socket connection to pass and receive data.
 Run
 ---
 
-  - node.js `sh launch.sh`
-  - python `python launch.py`
+	sh launch.sh
 
 Setup
 -----
@@ -23,4 +22,3 @@ Todo
 ----
 
   - add public api to send and receive data
-  - socket.io client to run in command line mode
