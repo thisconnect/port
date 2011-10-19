@@ -16,7 +16,7 @@ Setup
 Requires
 --------
   - [Pd](http://crca.ucsd.edu/~msp/software.html)
-  - [node.js](http://nodejs.org/) or [python](http://www.python.org/)
+  - [node.js](http://nodejs.org/)
 
 Todo
 ----
