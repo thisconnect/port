@@ -1,4 +1,4 @@
-#N canvas 154 22 957 652 10;
+#N canvas 32 22 731 665 10;
 #X declare -path support/mine/ -path support/pddom/ -path support/pdsocket/
 ;
 #X text 55 45 Space;
@@ -6,9 +6,9 @@
 #X obj 55 575 dac~;
 #X obj 125 315 s space;
 #X obj 55 285 route space;
-#X obj 235 255 del 0;
-#X obj 235 215 loadbang;
-#X msg 235 295 \; pd dsp 1 \, dsp 0;
+#X obj 523 506 del 0;
+#X obj 523 466 loadbang;
+#X msg 523 546 \; pd dsp 1 \, dsp 0;
 #X obj 75 205 print incoming;
 #X msg 235 552 vis \$1;
 #X obj 235 532 hradio 15 1 0 12 empty empty empty 0 -8 0 10 -262144
@@ -19,11 +19,10 @@
 #X obj 235 385 spigot;
 #X obj 235 415 print verbose;
 #X msg 235 582 reset;
-#X msg 535 381 send some data back;
 #X msg 235 505 add delay~;
 #X msg 235 465 \; space.to run 0;
-#X msg 442 307 64 66 71 73 74 66 64 73 71 66 74 73;
-#X msg 442 75 \; space reset \; space chain pulse counter memory memory
+#X msg 522 307 64 66 71 73 74 66 64 73 71 66 74 73;
+#X msg 522 75 \; space reset \; space chain pulse counter memory memory
 sinus~ envelope~ \; space.1 modulus 9 \; space.2 data 0 1 2 3 0 1 2
 3 1 3 \; space.3 data 0 0 369.994 523.251 698.456 \; space.4 level
 0.17 \; space.5 attack 20 \, decay 250 \; space.0 interval 330 \, run
@@ -32,10 +31,11 @@ sinus~ envelope~ \; space.1 modulus 9 \; space.2 data 0 1 2 3 0 1 2
 interval 350 \, run 1 \; pd dsp 1;
 #X obj 55 75 declare -path support/mine/ -path support/pddom/ -path
 support/pdsocket/;
-#X obj 642 435 netsend;
-#X obj 686 358 loadbang;
+#X obj 224 262 netsend;
+#X obj 258 155 loadbang;
 #X obj 55 155 netreceive 4541 0;
-#X msg 686 398 connect localhost 4542;
+#X msg 258 195 connect localhost 4542;
+#X msg 258 225 send -2 -1 0 1 2 3 4 5;
 #X connect 1 0 2 0;
 #X connect 1 0 2 1;
 #X connect 4 0 1 1;
@@ -48,9 +48,9 @@ support/pdsocket/;
 #X connect 12 0 13 0;
 #X connect 13 0 14 0;
 #X connect 15 0 1 1;
-#X connect 16 0 22 0;
-#X connect 17 0 1 1;
-#X connect 23 0 25 0;
-#X connect 24 0 8 0;
-#X connect 24 0 4 0;
-#X connect 25 0 22 0;
+#X connect 16 0 1 1;
+#X connect 22 0 24 0;
+#X connect 23 0 8 0;
+#X connect 23 0 4 0;
+#X connect 24 0 21 0;
+#X connect 25 0 21 0;
