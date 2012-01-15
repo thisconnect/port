@@ -7,9 +7,6 @@
 [submodule "node_modules/uglify-js"]
 	path = node_modules/uglify-js
 	url = git://github.com/thisconnect/uglify-js.git
-[submodule "node_modules/websocket-client"]
-	path = node_modules/websocket-client
-	url = git://github.com/thisconnect/websocket-client.git
 [submodule "node_modules/socket.io-client"]
 	path = node_modules/socket.io-client
 	url = git://github.com/thisconnect/socket.io-client.git
