@@ -13,3 +13,9 @@
 [submodule "support/mine"]
 	path = support/mine
 	url = git://github.com/thisconnect/mine.git
+[submodule "node_modules/ws"]
+	path = node_modules/ws
+	url = git://github.com/thisconnect/ws.git
+[submodule "node_modules/options"]
+	path = node_modules/options
+	url = git://github.com/thisconnect/options.git
