@@ -19,3 +19,9 @@
 [submodule "node_modules/options"]
 	path = node_modules/options
 	url = git://github.com/thisconnect/options.git
+[submodule "node_modules/active-x-obfuscator"]
+	path = node_modules/active-x-obfuscator
+	url = git://github.com/thisconnect/active-x-obfuscator.git
+[submodule "node_modules/zeparser"]
+	path = node_modules/zeparser
+	url = git://github.com/thisconnect/zeparser.git
