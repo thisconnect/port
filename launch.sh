@@ -8,8 +8,8 @@ case $OSTYPE in
 		;;
     'darwin10.0')
 		# open ./base.pd
-		#/Applications/Pd-0.43-0.app/Contents/Resources/bin/pd -stderr -noprefs ./base.pd 
-		/Applications/Pd-0.43-0.app/Contents/Resources/bin/pd -stderr -noprefs -nogui ./base.pd 
+		/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd -stderr -noprefs ./base.pd 
+		#/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd -stderr -noprefs -nogui ./base.pd 
 		;;
 esac
 
