@@ -25,3 +25,6 @@
 [submodule "node_modules/zeparser"]
 	path = node_modules/zeparser
 	url = git://github.com/thisconnect/zeparser.git
+[submodule "tests/testigo"]
+	path = tests/testigo
+	url = git://github.com/thisconnect/testigo.git

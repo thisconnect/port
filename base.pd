@@ -1,25 +1,25 @@
-#N canvas 240 22 894 636 10;
+#N canvas 82 22 894 636 10;
 #X declare -path support/mine/ -path support/pddom/;
 #X text 55 45 Space;
-#X obj 55 535 pd-dom space;
-#X obj 55 575 dac~;
-#X obj 125 315 s space;
-#X obj 55 285 route space;
-#X obj 523 506 del 0;
-#X obj 523 466 loadbang;
-#X msg 523 546 \; pd dsp 1 \, dsp 0;
-#X obj 75 205 print incoming;
-#X msg 235 552 vis \$1;
-#X obj 235 532 hradio 15 1 0 12 empty empty empty 0 -8 0 10 -262144
+#X obj 55 505 pd-dom space;
+#X obj 55 545 dac~;
+#X obj 125 285 s space;
+#X obj 55 255 route space;
+#X obj 523 476 del 0;
+#X obj 523 436 loadbang;
+#X msg 523 516 \; pd dsp 1 \, dsp 0;
+#X obj 75 175 print incoming;
+#X msg 235 522 vis \$1;
+#X obj 235 502 hradio 15 1 0 12 empty empty empty 0 -8 0 10 -262144
 -1 -1 0;
-#X obj 295 355 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 295 325 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 235 355 r space;
-#X obj 235 385 spigot;
-#X obj 235 415 print verbose;
-#X msg 235 582 reset;
-#X msg 235 505 add delay~;
-#X msg 235 465 \; space.to run 0;
+#X obj 235 325 r space;
+#X obj 235 355 spigot;
+#X obj 235 385 print verbose;
+#X msg 235 552 reset;
+#X msg 235 475 add delay~;
+#X msg 235 435 \; space.to run 0;
 #X msg 522 307 64 66 71 73 74 66 64 73 71 66 74 73;
 #X msg 522 75 \; space reset \; space chain pulse counter memory memory
 sinus~ envelope~ \; space.1 modulus 9 \; space.2 data 0 1 2 3 0 1 2
@@ -28,16 +28,12 @@ sinus~ envelope~ \; space.1 modulus 9 \; space.2 data 0 1 2 3 0 1 2
 1 \; space chain pulse counter memory sinus~ envelope~ \; space.7 modulus
 9 \; space.8 data 0 1 2 3 0 1 2 3 1 3 \; space.9 level 0.19 \; space.6
 interval 350 \, run 1 \; pd dsp 1;
-#X obj 215 305 netsend;
-#X obj 302 195 loadbang;
-#X obj 55 155 netreceive 4541 0;
-#X msg 374 235 send -2 -1 0 1 2 3 4 5;
+#X obj 235 245 netsend;
+#X obj 235 125 loadbang;
+#X msg 265 205 send -2 -1 0 1 2 3 4 5;
 #X obj 55 75 declare -path support/mine/ -path support/pddom/;
-#X obj 215 195 select 1;
-#X obj 325 285 == 0;
-#X msg 215 235 connect localhost 4542;
-#X obj 215 265 spigot 1;
-#X obj 234 152 print sfd;
+#X msg 235 165 connect localhost 8003;
+#X obj 55 125 netreceive 8004 0;
 #X connect 1 0 2 0;
 #X connect 1 0 2 1;
 #X connect 4 0 1 1;
@@ -51,14 +47,8 @@ interval 350 \, run 1 \; pd dsp 1;
 #X connect 13 0 14 0;
 #X connect 15 0 1 1;
 #X connect 16 0 1 1;
-#X connect 20 0 26 0;
-#X connect 22 0 8 0;
-#X connect 22 0 4 0;
-#X connect 22 1 25 0;
-#X connect 22 1 29 0;
-#X connect 23 0 20 0;
-#X connect 25 0 27 0;
-#X connect 25 0 29 0;
-#X connect 26 0 28 1;
-#X connect 27 0 28 0;
-#X connect 28 0 20 0;
+#X connect 21 0 24 0;
+#X connect 22 0 20 0;
+#X connect 24 0 20 0;
+#X connect 25 0 8 0;
+#X connect 25 0 4 0;
