@@ -1,11 +1,10 @@
 exports.setup = function(Tests){
 
-var os = require('os'),
-	path = require('path'),
+var path = require('path'),
 	pd = require('../../lib/station/modules/pd').Wrapper;
 
 function getPdPath(){
-	if (os.platform() == 'darwin'){
+	if (process.platform == 'darwin'){
 		return '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd';
 	} else {
 		return 'pd';
@@ -13,8 +12,7 @@ function getPdPath(){
 }
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
-//console.log(process.cwd(), process.argv[1]);
-console.log();
+
 
 
 Tests.describe('Pd wrapper', function(it){
