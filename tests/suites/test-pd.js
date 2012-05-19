@@ -1,6 +1,7 @@
 exports.setup = function(Tests){
 
 var os = require('os'),
+	path = require('path'),
 	pd = require('../../lib/station/modules/pd').Wrapper;
 
 function getPdPath(){
@@ -11,13 +12,18 @@ function getPdPath(){
 	}
 }
 
+var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
+//console.log(process.cwd(), process.argv[1]);
+console.log();
+
+
 Tests.describe('Pd wrapper', function(it){
 
 
 	it('should open Pd, setup listener and sender', function(expect){
 
 		var receiver = pd.listen(8001),
-			puredata = pd.start(getPdPath(), ['-stderr', '-noprefs', './suites/test.connect.pd']);
+			puredata = pd.start(getPdPath(), ['-nogui', '-stderr', '-noprefs', dir +'/suites/test.connect.pd']);
 
 		// listen to connections from [netsend]
 		receiver.on('connection', function(socket){
@@ -42,7 +48,7 @@ Tests.describe('Pd wrapper', function(it){
 	it('should receive a message returned from Pd', function(expect){
 
 		var receiver = pd.listen(8003),
-			puredata = pd.start(getPdPath(), ['-stderr', '-noprefs', './suites/test.io.pd']);
+			puredata = pd.start(getPdPath(), ['-nogui', '-stderr', '-noprefs', dir +'/suites/test.io.pd']);
 
 		// listen to connections from [netsend]
 		receiver.on('connection', function(socket){
@@ -73,8 +79,8 @@ Tests.describe('Pd wrapper', function(it){
 
 		var receiver1 = pd.listen(8001),
 			receiver2 = pd.listen(8003),
-			puredata1 = pd.start(getPdPath(), ['-stderr', '-noprefs', './suites/test.connect.pd']),
-			puredata2 = pd.start(getPdPath(), ['-stderr', '-noprefs', './suites/test.io.pd']);
+			puredata1 = pd.start(getPdPath(), ['-nogui', '-stderr', '-noprefs', dir +'/suites/test.connect.pd']),
+			puredata2 = pd.start(getPdPath(), ['-nogui', '-stderr', '-noprefs', dir +'/suites/test.io.pd']);
 
 
 		// listen to connections from [netsend]
@@ -97,6 +103,7 @@ Tests.describe('Pd wrapper', function(it){
 				setTimeout(function(){
 					puredata1.kill();
 					puredata2.kill();
+					process.exit();
 				}, 1000);
 			});
 
