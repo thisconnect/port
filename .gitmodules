@@ -1,30 +1,9 @@
 [submodule "support/pddom"]
 	path = support/pddom
 	url = git://github.com/thisconnect/pddom.git
-[submodule "node_modules/xmlhttprequest"]
-	path = node_modules/xmlhttprequest
-	url = git://github.com/thisconnect/xmlhttprequest.git
-[submodule "node_modules/uglify-js"]
-	path = node_modules/uglify-js
-	url = git://github.com/thisconnect/uglify-js.git
-[submodule "node_modules/socket.io-client"]
-	path = node_modules/socket.io-client
-	url = git://github.com/thisconnect/socket.io-client.git
 [submodule "support/mine"]
 	path = support/mine
 	url = git://github.com/thisconnect/mine.git
-[submodule "node_modules/ws"]
-	path = node_modules/ws
-	url = git://github.com/thisconnect/ws.git
-[submodule "node_modules/options"]
-	path = node_modules/options
-	url = git://github.com/thisconnect/options.git
-[submodule "node_modules/active-x-obfuscator"]
-	path = node_modules/active-x-obfuscator
-	url = git://github.com/thisconnect/active-x-obfuscator.git
-[submodule "node_modules/zeparser"]
-	path = node_modules/zeparser
-	url = git://github.com/thisconnect/zeparser.git
 [submodule "tests/testigo"]
 	path = tests/testigo
 	url = git://github.com/thisconnect/testigo.git
