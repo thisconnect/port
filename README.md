@@ -7,8 +7,7 @@ Setup
 -----
 
 	git submodule update --init --recursive
-	cd node_modules/ws/
-	make
+	npm install
 
 Run
 ---
