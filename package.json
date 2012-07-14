@@ -9,9 +9,6 @@
 	"dependencies": {
 		"socket.io-client": ">= 0.9.5"
 	},
-	"engines": {
-		"node": "0.6.x"
-	},
 	"licenses": [{
 		"type": "MIT",
 		"url": "https://raw.github.com/thisconnect/planet/master/LICENSE"
