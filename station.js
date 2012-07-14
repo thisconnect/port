@@ -1,6 +1,6 @@
-var net = require('net'),
-	spawn = require('child_process').spawn,
-	io = require('socket.io-client');
+var io = require('socket.io-client'),
+	net = require('net'),
+	spawn = require('child_process').spawn;
 
 function station(options){
 	if (options){
@@ -21,6 +21,10 @@ station.prototype = {
 		},
 
 		// pd
+		pd: (process.platform == 'darwin')
+			? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
+			: 'pd',
+
 		flags: ['-path', '../blib/', '-noprefs', './base.pd'],
 
 		host: 'localhost',
@@ -35,10 +39,10 @@ station.prototype = {
 			this.connect();
 		},
 
-		onStderr: function(chunk){ // logs data from [print] in '-stderr' mode
+		onStderr: function(chunk){ // [print] only in '-stderr' mode
 			console.log('[print]', chunk.toString().trim());
 		},
-		onData: function(buffer){ // receive from [netsend]
+		onData: function(buffer){ // [netsend]
 			console.log('[netsend]', buffer.trim());
 		},
 		onClose: function(had_error){
@@ -58,12 +62,8 @@ station.prototype = {
 		onError: function(error){}
 	},
 
-	status: function(prop){
-		return prop ? this[prop] : this;
-	},
-
 	// planet
-	state: {},
+	client: null,
 	connect: function(location){
 		var client = this.client = io.connect(this.options.location, this.options.client);
 		client.on('initial state', this.put.bind(this));
@@ -74,12 +74,9 @@ station.prototype = {
 
 
 	// pd
+	pd: null,
 	create: function(){
-		var pd = this.pd = spawn((process.platform == 'darwin')
-			? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
-			: 'pd'
-			, this.options.flags);
-		
+		var pd = this.pd = spawn(this.options.pd, this.options.flags);
 		pd.stderr.on('data', this.options.onStderr);
 		process.on('exit', this.destroy.bind(this));
 	},
@@ -89,6 +86,7 @@ station.prototype = {
 
 
 	// connect to [netreceive]
+	socket: null,
 	writer: function(port, host){
 		var socket = this.socket = new net.Socket();
 		socket.connect(this.options.write, this.options.host);
@@ -98,6 +96,7 @@ station.prototype = {
 
 
 	// listen for [netsend]
+	server: null,
 	listen: function(port, host){
 		var server = this.server = net.createServer();
 		server.listen(this.options.read, this.options.host);
@@ -135,8 +134,8 @@ station.prototype = {
 		return paket.join(';\n');
 	},
 
-	fromFUDI: function(){},
-
+	//fromFUDI: function(){},
+	state: {},
 	put: function(data){
 		var components = '', values = '';
 		for (var pos in data){

@@ -5,7 +5,7 @@
 	"contributors": [
 		{"name": "Enrique Erne"}
 	],
-	"main": "./lib/station/station",
+	"main": "station",
 	"dependencies": {
 		"socket.io-client": ">= 0.9.5"
 	},

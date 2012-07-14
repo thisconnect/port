@@ -1,1 +1,1 @@
-require('./lib/station/station');
+require('./station');
