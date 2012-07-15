@@ -1,18 +1,9 @@
 exports.setup = function(Tests){
 
 var path = require('path'),
-	pd = require('../../lib/station/modules/pd').Wrapper;
-
-function getPdPath(){
-	if (process.platform == 'darwin'){
-		return '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd';
-	} else {
-		return 'pd';
-	}
-}
+	station = require('../../station');
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
-
 
 
 Tests.describe('Pd wrapper', function(it){
@@ -20,8 +11,14 @@ Tests.describe('Pd wrapper', function(it){
 
 	it('should open Pd, setup listener and sender', function(expect){
 
-		var receiver = pd.listen(8001),
-			puredata = pd.start(getPdPath(), ['-nogui', '-stderr', '-noprefs', dir +'/suites/test.connect.pd']);
+		var space = new station({
+			read: 8001,
+			write: 8002,
+			flags: ['-nogui', '-stderr', '-noprefs', dir +'/suites/test.connect.pd'],
+			onInit: function(){
+				console.log('init');
+			}
+		});
 
 		// listen to connections from [netsend]
 		receiver.on('connection', function(socket){
@@ -42,7 +39,7 @@ Tests.describe('Pd wrapper', function(it){
 
 	});
 
-
+/*
 	it('should receive a message returned from Pd', function(expect){
 
 		var receiver = pd.listen(8003),
@@ -116,7 +113,7 @@ Tests.describe('Pd wrapper', function(it){
 		receiver2.on('error', function(error){ console.log('pd.onError', error); });
 
 	});
-
+*/
 });
 
 };

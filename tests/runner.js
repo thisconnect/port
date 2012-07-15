@@ -4,7 +4,7 @@ var Testigo = require('./testigo/Source/testigo').Testigo,
 
 // Import test cases
 require('./suites/test.pd').setup(Tests);
-require('./suites/test.planet').setup(Tests);
+//require('./suites/test.planet').setup(Tests);
 
 // Run tests
 Runner.run();
