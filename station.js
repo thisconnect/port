@@ -33,7 +33,7 @@ station.prototype = {
 		encoding: 'ascii', // 'utf8', 'base64'
 
 		onReader: function(socket){},
-		onWriter: function(socket){console.log(socket);
+		onWriter: function(socket){
 			this.connect();
 		},
 
@@ -64,10 +64,12 @@ station.prototype = {
 	pd: null,
 	create: function(){ // spawn pd process
 		var pd = this.pd = spawn(this.options.pd, this.options.flags);
-		pd.stderr.on('data', this.options.onStderr);
+		pd.stderr.on('data', this.options.onStderr.bind(this));
 		process.on('exit', this.destroy.bind(this));
 	},
 	destroy: function(){
+		if (this.server) this.server.close();
+		if (this.socket) this.socket.destroy();
 		this.pd.kill();
 	},
 

@@ -10,16 +10,25 @@ Tests.describe('Pd wrapper', function(it){
 
 
 	it('should open Pd, setup listener and sender', function(expect){
+		expect.perform(3);
 
 		var space = new station({
 			read: 8001,
 			write: 8002,
-			flags: ['-nogui', '-stderr', '-noprefs', dir +'/suites/test.connect.pd'],
-			onInit: function(){
-				console.log('init');
+			flags: ['-stderr', '-noprefs', '-nogui', dir +'/suites/test.loadbang.pd'],
+			onInit: null,
+			onStderr: function(buffer){
+				expect(buffer).toBeType('object');
+				expect(buffer.toString()).toBeTruthy();
+				expect(buffer.toString().trim()).toEqual('print: bang');
+				this.destroy();
+			},
+			onError: function(error){
+				console.log('error', error);
 			}
 		});
-
+		space.create();
+/*
 		// listen to connections from [netsend]
 		receiver.on('connection', function(socket){
 
@@ -33,10 +42,10 @@ Tests.describe('Pd wrapper', function(it){
 			});
 		});
 
-		receiver.on('error', function(error){
+		space.on('error', function(error){
 			console.log('pd.onError', error);
 		});
-
+*/
 	});
 
 /*
