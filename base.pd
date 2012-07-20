@@ -20,9 +20,11 @@
 #X obj 192 120 print;
 #X obj 35 85 r netsend;
 #X msg 35 245 \; netsend connect localhost 8003;
-#X msg 35 285 \; netsend send 1 2 3 \, send 4 5 6 \, send 7 8 9;
+#X msg 35 325 \; netsend send 1 2 3 \, send 4 5 6 \, send 7 8 9;
 #X obj 175 155 s netreceive;
 #X obj 365 215 r netreceive;
+#X msg 35 365 \; netsend disconnect;
+#X msg 35 285 \; netsend send a b c;
 #X connect 0 0 1 0;
 #X connect 0 0 1 1;
 #X connect 2 0 4 0;
