@@ -15,22 +15,21 @@ station.prototype = {
 
 	options: {
 		onInit: function(){
-			this.listen();
 			this.create();
 		},
 		onReady: function(){},
 
 		// pd
-		pd: (process.platform == 'darwin')
+		pd: ('darwin' == process.platform)
 			? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
 			: 'pd',
 
-		flags: ['-path', '../blib/', '-noprefs', './base.pd'],
+		flags: ['-path', '../blib/', '-noprefs', './base.pd'], // '-stderr'
 
+		encoding: 'ascii', // 'utf8', 'base64'
 		host: 'localhost',
 		read: 8003, // [netsend]
 		write: 8004, // [netreceive]
-		encoding: 'ascii', // 'utf8', 'base64'
 
 		onReader: function(socket){},
 		onWriter: function(socket){},
@@ -51,15 +50,16 @@ station.prototype = {
 
 
 	pd: null,
-	create: function(){ // spawn pd process
+	create: function(){
+		this.listen();
 		var pd = this.pd = spawn(this.options.pd, this.options.flags);
 		pd.stderr.on('data', this.options.onStderr.bind(this));
 		process.on('exit', this.destroy.bind(this));
 	},
 	destroy: function(){
-		if (this.server) this.server.close();
+		if (this.server && 0 < this.server.connections) this.server.close();
 		if (this.socket) this.socket.destroy();
-		this.pd.kill();
+		if (this.pd) this.pd.kill();
 	},
 
 
