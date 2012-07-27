@@ -9,10 +9,13 @@ Setup
 	git submodule update --init --recursive
 	npm install
 
-Run
----
+Example
+-------
 
-	node lib/station/station.js
+	cd station/
+	node
+	station = require('./station')
+	new station([options])
 
 Run tests
 ---------
@@ -21,5 +24,5 @@ Run tests
 
 Requires
 --------
-  - [Pd 0.43](http://crca.ucsd.edu/~msp/software.html)
-  - [node.js 0.6.x](http://nodejs.org/)
+  - [Pure Data](http://crca.ucsd.edu/~msp/software.html)
+  - [node.js](http://nodejs.org/)
