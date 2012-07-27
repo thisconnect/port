@@ -8,15 +8,12 @@ var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
 Tests.describe('Pd wrapper', function(it){
 
-
-	it('should open Pd, setup listener and sender', function(expect){
+	it('should open Pd -stderr and receive a bang from [print]', function(expect){
 		expect.perform(3);
 
-		var space = new station({
-			read: 8001,
-			write: 8002,
-			flags: ['-stderr', '-noprefs', '-nogui', dir +'/suites/test.loadbang.pd'],
-			onInit: null,
+		station({
+			lala: 12,
+			flags: ['-stderr', '-noprefs', '-nogui', dir + '/suites/test.loadbang.pd'],
 			onStderr: function(buffer){
 				expect(buffer).toBeType('object');
 				expect(buffer.toString()).toBeTruthy();
@@ -26,27 +23,37 @@ Tests.describe('Pd wrapper', function(it){
 			onError: function(error){
 				console.log('error', error);
 			}
-		});
-		space.create();
-/*
-		// listen to connections from [netsend]
-		receiver.on('connection', function(socket){
+		}).create();
 
-			// connect to [netreceive]
-			var sender = pd.connect(8002);
-			sender.on('connect', function(){
-				expect(true).toBeTruthy();
-				receiver.close();
-				sender.destroy();
-				puredata.kill();
-			});
-		});
-
-		space.on('error', function(error){
-			console.log('pd.onError', error);
-		});
-*/
 	});
+
+	it('should listen to a connection from [netsend], open Pd, connect to [netreceive]', function(expect){
+		expect.perform(4);
+
+		station({
+			lala: 34,
+			read: 8001, // [netsend]
+			write: 8002, // [netreceive]
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.connect.pd'],
+			onReader: function(socket){
+				expect(socket).toBeType('object');
+				expect(socket.toString()).toBeTruthy();
+			},
+			onWriter: function(socket){
+				expect(socket).toBeType('object');
+				expect(socket.toString()).toBeTruthy();
+				this.destroy();
+			},
+			onError: function(error){
+				console.log('error', error);
+			}
+		}).listen().create();
+
+	});
+	
+	//console.log(station().options);
+
+
 
 /*
 	it('should receive a message returned from Pd', function(expect){

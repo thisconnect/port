@@ -1,62 +1,30 @@
 var net = require('net'),
 	spawn = require('child_process').spawn;
 
-function station(options){
-	if (options){
+
+function Station(){}
+
+Station.prototype = {
+
+	options: {},
+
+	setOptions: function(options){
+		if (!options) return null;
 		for (var key in options){
 			this.options[key] = options[key];
 		}
-	}
-	if (this.options.onInit) this.options.onInit.call(this);
-	return this;
-}
-
-station.prototype = {
-
-	options: {
-		onInit: function(){
-			this.create();
-		},
-		onReady: function(){},
-
-		// pd
-		pd: ('darwin' == process.platform)
-			? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
-			: 'pd',
-
-		flags: ['-path', '../blib/', '-noprefs', './base.pd'], // '-stderr'
-
-		encoding: 'ascii', // 'utf8', 'base64'
-		host: 'localhost',
-		read: 8003, // [netsend]
-		write: 8004, // [netreceive]
-
-		onReader: function(socket){},
-		onWriter: function(socket){},
-
-		onStderr: function(chunk){ // [print] only in '-stderr' mode
-			console.log('[print]', chunk.toString().trim());
-		},
-		onData: function(buffer){ // [netsend]
-			console.log('[netsend]', buffer.trim());
-		},
-		onClose: function(had_error){
-			console.log('pd closed!!!');
-		},
-		
-		onError: function(error){}
-
 	},
 
 
 	pd: null,
 	create: function(){
-		this.listen();
 		var pd = this.pd = spawn(this.options.pd, this.options.flags);
 		pd.stderr.on('data', this.options.onStderr.bind(this));
 		process.on('exit', this.destroy.bind(this));
+		return this;
 	},
 	destroy: function(){
+// console.log('\n' + this.options.lala + '\n');
 		if (this.server && 0 < this.server.connections) this.server.close();
 		if (this.socket) this.socket.destroy();
 		if (this.pd) this.pd.kill();
@@ -89,6 +57,7 @@ station.prototype = {
 		server.listen(options.read, options.host);
 		server.on('error', options.onError);
 		server.on('connection', this.reader.bind(this));
+		return this;
 	},
 	//ignore: function(){},
 	reader: function(socket){
@@ -99,8 +68,33 @@ station.prototype = {
 		this.options.onReader(socket);
 	}
 
-
-
 };
 
-module.exports = station;
+module.exports = function(options) {
+	var that = new Station();
+	that.options = {
+		onInit: function(){},
+		onReady: function(){},
+		// pd
+		pd: ('darwin' == process.platform)
+			? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
+			: 'pd',
+		flags: ['-path', '../blib/', '-noprefs', './base.pd'], // '-stderr'
+		encoding: 'ascii', // 'utf8', 'base64'
+		host: 'localhost',
+		read: 8003, // [netsend]
+		write: 8004, // [netreceive]
+		onReader: function(socket){},
+		onWriter: function(socket){},
+		onStderr: function(chunk){}, // [print] only in '-stderr' mode
+		onData: function(buffer){}, // [netsend]
+		onClose: function(had_error){},
+		onError: function(error){}
+	};
+
+	that.setOptions(options);
+	return that;
+};
+
+
+
