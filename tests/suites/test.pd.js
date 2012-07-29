@@ -90,7 +90,7 @@ Tests.describe('Pd wrapper', function(it){
 				expect(socket.toString()).toBeTruthy();
 				
 				
-				station({
+				var two = station({
 					read: 8003, // [netsend]
 					write: 8004, // [netreceive]
 					flags: ['-noprefs', '-nogui', dir + '/suites/test.io.pd'],
@@ -98,7 +98,7 @@ Tests.describe('Pd wrapper', function(it){
 						expect(buffer).toBeType('string');
 						expect(buffer).toEqual('Hello Pd!;\n');
 						one.destroy();
-						this.destroy()
+						two.destroy()
 					},
 					onReady: function(){
 						this.write('send Hello Pd!;\n'); // send data to [netreceive]
@@ -106,14 +106,20 @@ Tests.describe('Pd wrapper', function(it){
 					onError: function(error){
 						console.log('error', error);
 					}
-				}).listen().create();
+				});
+				
+				two.listen();
+				two.create();
 				
 				
 			},
 			onError: function(error){
 				console.log('error', error);
 			}
-		}).listen().create();
+		});
+		
+		one.listen();
+		one.create();
 
 
 	});
