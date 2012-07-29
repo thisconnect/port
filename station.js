@@ -86,7 +86,7 @@ module.exports = function(options) {
 		pd: ('darwin' == process.platform)
 			? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
 			: 'pd',
-		flags: ['-path', '../blib/', '-noprefs', './base.pd'], // '-stderr'
+		flags: ['-path', '../blib/', '-noprefs', './station.pd'], // '-stderr'
 		encoding: 'ascii', // 'utf8', 'base64'
 		host: 'localhost',
 		read: 8003, // [netsend]
