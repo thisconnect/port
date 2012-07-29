@@ -6,9 +6,6 @@
 		{"name": "Enrique Erne"}
 	],
 	"main": "station",
-	"dependencies": {
-		"socket.io-client": ">= 0.9.5"
-	},
 	"licenses": [{
 		"type": "MIT",
 		"url": "https://raw.github.com/thisconnect/planet/master/LICENSE"
