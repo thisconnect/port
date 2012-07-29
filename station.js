@@ -24,9 +24,13 @@ Station.prototype = {
 		return this;
 	},
 	destroy: function(){
-// console.log('\n' + this.options.lala + '\n');
-		if (this.server && 0 < this.server.connections) this.server.close();
+		/*console.log('\nsocket', this.socket);
+		console.log('\nserver', this.server);
+		console.log('\npd', this.pd);*/
+		
+	
 		if (this.socket) this.socket.destroy();
+		if (this.server && 0 < this.server.connections) this.server.close();
 		if (this.pd) this.pd.kill();
 	},
 
@@ -41,7 +45,7 @@ Station.prototype = {
 		socket.setEncoding(options.encoding);
 		socket.on('connect', function(){
 			options.onWriter.apply(that, [socket]);
-			options.onReady.call(this);
+			options.onReady.call(that);
 		});
 	},
 	write: function(data){
@@ -61,17 +65,20 @@ Station.prototype = {
 	},
 	//ignore: function(){},
 	reader: function(socket){
+		var bound = { onData: this.options.onData.bind(this) };
 		socket.setEncoding(this.options.encoding);
-		socket.on('data', this.options.onData);
+		socket.on('data', bound.onData);
 		socket.on('close', this.options.onClose);
 		this.writer();
-		this.options.onReader(socket);
+		this.options.onReader.apply(this, [socket]);
 	}
 
 };
 
 module.exports = function(options) {
+
 	var that = new Station();
+
 	that.options = {
 		onInit: function(){},
 		onReady: function(){},
