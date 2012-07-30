@@ -1,7 +1,7 @@
 Station
 =======
 
-Runs an audio engine and provides a socket connection to pass and receive data.
+Runs an audio engine and provides a socket connection to send and receive data.
 
 Setup
 -----
@@ -14,8 +14,13 @@ Example
 
 	cd station/
 	node
-	station = require('./station')
-	new station([options])
+	var station = require('./station')
+	station([options])
+
+Options
+-------
+
+
 
 Run tests
 ---------

@@ -15,62 +15,71 @@ Station.prototype = {
 		}
 	},
 
-
 	pd: null,
+
 	create: function(){
-		var pd = this.pd = spawn(this.options.pd, this.options.flags);
-		pd.stderr.on('data', this.options.onStderr.bind(this));
-		process.on('exit', this.destroy.bind(this));
+		var o = this.options,
+			pd = this.pd = spawn(o.pd, o.flags),
+			bound = {
+				onStderr: o.onStderr.bind(this),
+				destroy: this.destroy.bind(this)
+			};
+
+		pd.stderr.on('data', bound.onStderr);
+		process.on('exit', bound.destroy);
 		return this;
 	},
+
 	destroy: function(){
-		/*console.log('\nsocket', this.socket);
-		console.log('\nserver', this.server);
-		console.log('\npd', this.pd);*/
-		
-	
 		if (this.socket) this.socket.destroy();
 		if (this.server && 0 < this.server.connections) this.server.close();
 		if (this.pd) this.pd.kill();
 	},
 
-
 	socket: null,
+
 	writer: function(port, host){ // connect to [netreceive]
 		var that = this,
-			options = this.options, 
+			o = this.options,
 			socket = this.socket = new net.Socket();
 
-		socket.connect(options.write, options.host);
-		socket.setEncoding(options.encoding);
+		socket.connect(o.write, o.host);
+		socket.setEncoding(o.encoding);
 		socket.on('connect', function(){
-			options.onWriter.apply(that, [socket]);
-			options.onReady.call(that);
+			o.onWriter.apply(that, [socket]);
+			o.onReady.call(that);
 		});
 	},
+
 	write: function(data){
 		this.socket.write(data);
 	},
 
-
 	server: null,
+
 	listen: function(port, host){ // listen for [netsend]
-		var options = this.options,
+		var o = this.options,
 			server = this.server = net.createServer();
 
-		server.listen(options.read, options.host);
-		server.on('error', options.onError);
+		server.listen(o.read, o.host);
+		server.on('error', o.onError);
 		server.on('connection', this.reader.bind(this));
 		return this;
 	},
+
 	//ignore: function(){},
+
 	reader: function(socket){
-		var bound = { onData: this.options.onData.bind(this) };
-		socket.setEncoding(this.options.encoding);
+		var o = this.options,
+			bound = {
+				onData: o.onData.bind(this)
+			};
+
+		socket.setEncoding(o.encoding);
 		socket.on('data', bound.onData);
-		socket.on('close', this.options.onClose);
+		socket.on('close', o.onClose);
 		this.writer();
-		this.options.onReader.apply(this, [socket]);
+		o.onReader.apply(this, [socket]);
 	}
 
 };
