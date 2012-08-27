@@ -12,7 +12,7 @@ Tests.describe('Pd wrapper', function(it){
 		expect.perform(3);
 
 		station({
-			flags: ['-noprefs', '-stderr', '-nogui', dir + '/suites/test.loadbang.pd'], // 
+			flags: ['-noprefs', '-stderr', '-nogui', dir + '/suites/test.loadbang.pd'],
 			onStderr: function(buffer){
 				expect(buffer).toBeType('object');
 				expect(buffer.toString()).toBeTruthy();

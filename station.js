@@ -72,12 +72,13 @@ Station.prototype = {
 	reader: function(socket){
 		var o = this.options,
 			bound = {
-				onData: o.onData.bind(this)
+				onData: o.onData.bind(this),
+				onClose: o.onClose.bind(this)
 			};
 
 		socket.setEncoding(o.encoding);
 		socket.on('data', bound.onData);
-		socket.on('close', o.onClose);
+		socket.on('close', bound.onClose);
 		this.writer();
 		o.onReader.apply(this, [socket]);
 	}
@@ -89,9 +90,7 @@ module.exports = function(options) {
 	var that = new Station();
 
 	that.options = {
-		onInit: function(){},
 		onReady: function(){},
-		// pd
 		pd: ('darwin' == process.platform)
 			? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
 			: 'pd',
@@ -100,10 +99,10 @@ module.exports = function(options) {
 		host: 'localhost',
 		read: 8003, // [netsend]
 		write: 8004, // [netreceive]
-		onReader: function(socket){},
+		onReader: function(socket){}, // [connect <port>( -> [netsend]
+		onData: function(buffer){}, // [send <data>( -> [netsend]
 		onWriter: function(socket){},
 		onStderr: function(chunk){}, // [print] only in '-stderr' mode
-		onData: function(buffer){}, // [netsend]
 		onClose: function(had_error){},
 		onError: function(error){}
 	};
