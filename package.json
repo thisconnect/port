@@ -1,13 +1,13 @@
 {
-	"name": "station",
-	"version": "0.4.0-dev",
-	"author": "Enrique Erne (http://mild.ch/)",
-	"contributors": [
+	"name": "station"
+    , "version": "0.4.0-dev"
+    , "author": "Enrique Erne (http://mild.ch/)"
+    , "contributors": [
 		{"name": "Enrique Erne"}
-	],
-	"main": "station",
-	"licenses": [{
-		"type": "MIT",
-		"url": "https://raw.github.com/thisconnect/planet/master/LICENSE"
+	]
+    , "main": "station"
+    , "licenses": [{
+		"type": "MIT"
+        , "url": "https://raw.github.com/thisconnect/planet/master/LICENSE"
 	}]
 }
