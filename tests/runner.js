@@ -3,7 +3,7 @@ var Testigo = require('./testigo/Source/testigo').Testigo,
 	Runner = new Testigo.Runners.Simple('node', Tests);
 
 // Import test cases
-require('./suites/test.pd').setup(Tests);
+require('./suites/tests').setup(Tests);
 
 // Run tests
 Runner.run();
