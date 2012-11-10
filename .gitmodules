@@ -1,9 +1,3 @@
-[submodule "support/pddom"]
-	path = support/pddom
-	url = git://github.com/thisconnect/pddom.git
-[submodule "support/mine"]
-	path = support/mine
-	url = git://github.com/thisconnect/mine.git
 [submodule "tests/testigo"]
 	path = tests/testigo
 	url = git://github.com/thisconnect/testigo.git
