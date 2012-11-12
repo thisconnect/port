@@ -43,7 +43,7 @@ Tests.describe('Pd connection', function(it){
 
 
 	it('should receive messages sent to Pd', function(expect){
-		expect.perform(3);
+		expect.perform(6);
 
 		station({
 			read: 8015, // [netsend]
@@ -56,6 +56,11 @@ Tests.describe('Pd connection', function(it){
 			expect(buffer).toEqual('Hello Pd!;\n');
 			expect(this).toBeAnInstanceOf(station);
 			this.destroy()
+		})
+		.on('reader', function(socket){
+			expect(socket).toBeType('object');
+			expect(socket.toString()).toBeTruthy();
+			expect(this).toBeAnInstanceOf(station);
 		})
 		.on('writer', function(){
 			// send data to [netreceive]
@@ -70,7 +75,7 @@ Tests.describe('Pd connection', function(it){
 
 
 	it('should open 2 Pd instances in parallel (using test 2 and 3)', function(expect){
-		expect.perform(6);
+		expect.perform(4);
 
 		var one = station({
 			read: 8005, // [netsend]
@@ -78,20 +83,15 @@ Tests.describe('Pd connection', function(it){
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.connect.pd']
 		});
 
-		one.on('reader', function(socket){
-			expect(socket).toBeType('object');
-			expect(socket.toString()).toBeTruthy();
+		var two = station({
+			read: 8015, // [netsend]
+			write: 8016, // [netreceive]
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.echo.pd']
 		});
 
 		one.on('writer', function(socket){
 			expect(socket).toBeType('object');
 			expect(socket.toString()).toBeTruthy();
-
-			var two = station({
-				read: 8015, // [netsend]
-				write: 8016, // [netreceive]
-				flags: ['-noprefs', '-nogui', dir + '/suites/test.echo.pd']
-			});
 
 			two.on('data', function(buffer){
 				// receive data from [netsend]
