@@ -8,6 +8,6 @@
     , "main": "station"
     , "licenses": [{
 		"type": "MIT"
-        , "url": "https://raw.github.com/thisconnect/planet/master/LICENSE"
+        , "url": "https://raw.github.com/thisconnect/station/master/LICENSE"
 	}]
 }

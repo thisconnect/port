@@ -10,11 +10,13 @@ Tests.describe('Pd wrapper', function(it){
 
 
 	it('should spawn Pd with -stderr flag and receive a bang from [print]', function(expect){
-		expect.perform(8);
+		expect.perform(9);
 
 		var pd = station({
 			flags: ['-noprefs', '-stderr', '-nogui', dir + '/suites/test.create.pd']
 		});
+
+		expect(pd).toBeAnInstanceOf(station);
 
 		// 'print' event is only available with '-stderr' flag
 		pd.on('print', function(buffer){
