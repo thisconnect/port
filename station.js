@@ -11,7 +11,7 @@ function Station(options){
 
 Station.prototype = Object.create(events.prototype);
 
-
+// sets options
 Station.prototype.setOptions = function(options){
 	this.options = {
 		host: options.host || 'localhost',
@@ -32,18 +32,18 @@ function reader(socket){
 	socket.on('data', this.emit.bind(this, 'data'));
 	socket.on('close', this.emit.bind(this, 'close'));
 	writer.call(this);
-	//o.onReader.apply(this, [socket]);
 	this.emit('reader', socket);
 }
 
 // connect to [netreceive]
 function writer(){
 	this.socket = new net.Socket();
-	this.socket.connect(this.options.write, this.options.host);
 	this.socket.setEncoding(this.options.encoding);
 	this.socket.on('connect', this.emit.bind(this, 'writer', this.socket));
+	this.socket.connect(this.options.write, this.options.host);
 }
 
+// create listener and pd process
 Station.prototype.create = function(){
 	// listens to [netsend]
 	this.server = net.createServer();
@@ -57,23 +57,23 @@ Station.prototype.create = function(){
 	this.pd.stderr.on('data', this.emit.bind(this, 'print'));
 	this.pd.on('exit', this.emit.bind(this, 'exit'));
 	//process.on('exit', this.destroy.bind(this));
-
 	return this;
 };
 
+// disconnect and end process
 Station.prototype.destroy = function(){
 	if (!!this.socket) this.socket.destroy();
 	if (!!this.server) this.server.close();
 	delete this.server;
 	if (!!this.pd) this.pd.kill();
-
 	return this;
 };
 
+// send data
 Station.prototype.write = function(data){
 	this.socket.write(data);
+	return this;
 };
-
 
 module.exports = Station;
 
