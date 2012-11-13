@@ -6,12 +6,12 @@ var net = require('net'),
 function Station(options){
 	if (!(this instanceof Station)) return new Station(options);
 	this.setOptions(options);
+	process.on('exit', this.destroy.bind(this));
 }
 
 
 Station.prototype = Object.create(events.prototype);
 
-// sets options
 Station.prototype.setOptions = function(options){
 	this.options = {
 		host: options.host || 'localhost',
@@ -21,60 +21,74 @@ Station.prototype.setOptions = function(options){
 			|| (('darwin' == process.platform)
 				? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
 				: 'pd'),
-		flags: options.flags || ['-noprefs', '-stderr', './station.pd'], // '-path', '../blib/', 
+		// see command line arguments for pd
+		// http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4
+		flags: options.flags || ['-noprefs', '-stderr', './station.pd'],
 		encoding: options.encoding || 'ascii' // 'utf8', 'base64'
 	};
 };
 
-// when [netsend] connects
-function reader(socket){
+// listen for [netsend]
+function listen(){
+	var receiver = this.receiver = net.createServer();
+	receiver.listen(this.options.read, this.options.host);
+	receiver.on('listening', this.emit.bind(this, 'listening'));
+	receiver.on('connection', connection.bind(this));
+	receiver.on('close', this.emit.bind(this, 'close'));
+	receiver.on('error', this.emit.bind(this, 'error'));
+}
+
+// start pd process
+function create(){
+	var child = this.child = spawn(this.options.pd, this.options.flags);
+	child.on('exit', this.emit.bind(this, 'exit'));
+	child.stderr.on('data', this.emit.bind(this, 'print'));
+}
+
+// on [netsend] connection
+function connection(socket){
 	socket.setEncoding(this.options.encoding);
 	socket.on('data', this.emit.bind(this, 'data'));
 	socket.on('close', this.emit.bind(this, 'close'));
-	writer.call(this);
-	this.emit('reader', socket);
+	this.emit('connection', socket);
 }
 
 // connect to [netreceive]
-function writer(){
-	this.socket = new net.Socket();
-	this.socket.setEncoding(this.options.encoding);
-	this.socket.on('connect', this.emit.bind(this, 'writer', this.socket));
-	this.socket.connect(this.options.write, this.options.host);
+function connect(){
+	var sender = this.sender = new net.Socket();
+	sender.setEncoding(this.options.encoding);
+	sender.on('connect', this.emit.bind(this, 'connect', sender));
+	sender.on('error', this.emit.bind(this, 'error'));
+	sender.on('close', this.emit.bind(this, 'close'));
+	sender.connect(this.options.write, this.options.host);
 }
 
-// create listener and pd process
 Station.prototype.create = function(){
-	// listens to [netsend]
-	this.server = net.createServer();
-	this.server.listen(this.options.read, this.options.host);
-	this.server.on('error', this.emit.bind(this, 'error'));
-	this.server.on('connection', reader.bind(this));
-	//this.server.on('listening', function(){});
-
-	// create child process
-	this.pd = spawn(this.options.pd, this.options.flags)
-	this.pd.stderr.on('data', this.emit.bind(this, 'print'));
-	this.pd.on('exit', this.emit.bind(this, 'exit'));
-	//process.on('exit', this.destroy.bind(this));
+	listen.call(this);
+	this.on('listening', create.bind(this));
+	this.on('connection', connect.bind(this));
 	return this;
 };
 
-// disconnect and end process
 Station.prototype.destroy = function(){
-	if (!!this.socket) this.socket.destroy();
-	if (!!this.server) this.server.close();
-	delete this.server;
-	if (!!this.pd) this.pd.kill();
+	if (!!this.sender) this.sender.destroy();
+	if (!!this.receiver) this.receiver.close();
+	delete this.receiver;
+	if (!!this.child) this.child.kill();
+	this.emit('destroy');
 	return this;
 };
 
-// send data
 Station.prototype.write = function(data){
-	this.socket.write(data);
+	this.sender.write(data);
 	return this;
 };
+
+/*
+Station.prototype.getPID = function(){
+	return this.child.pid;
+};
+*/
+
 
 module.exports = Station;
-
-

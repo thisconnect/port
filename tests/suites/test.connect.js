@@ -6,36 +6,34 @@ var path = require('path'),
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
 
-Tests.describe('Pd connection', function(it){
+Tests.describe('Station connection', function(it){
 
 
-	it('should listen to a connection from [netsend], open Pd, connect to [netreceive]', function(expect){
-		expect.perform(4);
+	it('should expose 2 sockets for [netsend] and [netreceive]', function(expect){
+		expect.perform(3);
 
 		station({
 			read: 8005, // [netsend]
 			write: 8006, // [netreceive]
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.connect.pd']
 		})
-		.on('reader', function(socket){
+		.on('connection', function(socket){
 			expect(socket).toBeType('object');
-			expect(socket.toString()).toBeTruthy();
 		})
-		.on('writer', function(socket){
+		.on('connect', function(socket){
 			expect(socket).toBeType('object');
-			expect(socket.toString()).toBeTruthy();
 			this.destroy();
 		})
-		.on('error', function(error){
-			console.log('error', error);
+		.on('destroy', function(){
+			expect(this).toBeAnInstanceOf(station);
 		})
 		.create();
 
 	});
 
 
-	it('should receive messages sent to Pd', function(expect){
-		expect.perform(10);
+	it('should echo messages sent to Pd', function(expect){
+		expect.perform(6);
 
 		var pd = station({
 			read: 8015, // [netsend]
@@ -43,33 +41,25 @@ Tests.describe('Pd connection', function(it){
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.echo.pd']
 		});
 
-		pd.on('reader', function(socket){
-// console.log('\n reader socket ', socket);
-			expect(socket).toBeType('object');
-			expect(socket.toString()).toBeTruthy();
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
+		// [netreceive] socket
+		pd.on('connect', function(socket){
+			expect(socket.write).toBeType('function');
+			expect(this.write).toBeType('function');
+			expect(pd.write).toBeType('function');
+			// sends data to [netreceive]
+			socket.write('Hello Pd!;\n');
 		});
 
-		pd.on('writer', function(socket){
-// console.log('\n writer ', socket);
-			// send data to [netreceive]
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
-			pd.write('Hello Pd!;\n');
-		});
-
+		// receives data from [netsend]
 		pd.on('data', function(buffer){
-			// receive data from [netsend]
 			expect(buffer).toBeType('string');
 			expect(buffer).toEqual('Hello Pd!;\n');
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
 			pd.destroy()
 		});
 
-		pd.on('error', function(error){
-			console.log('error', error);
+		// fires after pd process ends
+		pd.on('exit', function(code, signal){
+			expect(arguments.length).toBe(2);
 		});
 
 		pd.create();
@@ -77,8 +67,8 @@ Tests.describe('Pd connection', function(it){
 	});
 
 
-	it('should open 2 Pd instances in parallel (using test 2 and 3)', function(expect){
-		expect.perform(4);
+	it('should connect to two Pd instances in parallel', function(expect){
+		expect.perform(3);
 
 		var one = station({
 			read: 8005, // [netsend]
@@ -93,21 +83,18 @@ Tests.describe('Pd connection', function(it){
 		});
 
 		two.on('data', function(buffer){
-			// receive data from [netsend]
 			expect(buffer).toBeType('string');
 			expect(buffer).toEqual('Hello Pd!;\n');
 			one.destroy();
 			two.destroy()
 		});
 
-		two.on('reader', function(socket){
-			// send a message to [netreceive]
-			two.write('Hello Pd!;\n');
+		two.on('connect', function(socket){
+			socket.write('Hello Pd!;\n');
 		});
 
-		one.on('writer', function(socket){
+		one.on('connect', function(socket){
 			expect(socket).toBeType('object');
-			expect(socket.toString()).toBeTruthy();
 			two.create();
 		});
 
