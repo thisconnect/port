@@ -1,0 +1,10 @@
+#N canvas 229 22 344 260 10;
+#X obj 37 31 loadbang;
+#X obj 37 151 netsend;
+#X floatatom 37 191 5 0 0 0 - - -;
+#X obj 37 71 random 100;
+#X msg 37 111 connect localhost 8025 \, send 100;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;

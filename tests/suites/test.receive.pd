@@ -1,0 +1,4 @@
+#N canvas 0 22 330 216 10;
+#X obj 42 42 r nodejs;
+#X obj 42 82 print;
+#X connect 0 0 1 0;

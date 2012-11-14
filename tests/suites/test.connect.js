@@ -51,9 +51,9 @@ Tests.describe('Station connection', function(it){
 		});
 
 		// receives data from [netsend]
-		pd.on('data', function(buffer){
-			expect(buffer).toBeType('string');
-			expect(buffer).toEqual('Hello Pd!;\n');
+		pd.on('data', function(data){
+			expect(data).toBeType('string');
+			expect(data).toEqual('Hello Pd!;\n');
 			pd.destroy()
 		});
 
@@ -82,9 +82,9 @@ Tests.describe('Station connection', function(it){
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.echo.pd']
 		});
 
-		two.on('data', function(buffer){
-			expect(buffer).toBeType('string');
-			expect(buffer).toEqual('Hello Pd!;\n');
+		two.on('data', function(data){
+			expect(data).toBeType('string');
+			expect(data).toEqual('Hello Pd!;\n');
 			one.destroy();
 			two.destroy()
 		});
@@ -99,6 +99,27 @@ Tests.describe('Station connection', function(it){
 		});
 
 		one.create();
+
+	});
+
+
+	it('should establish a one way connection, listening only', function(expect){
+		expect.perform(4);
+
+		var pd = station({
+			read: 8025, // [netsend]
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.number.pd']
+		});
+
+		pd.on('data', function(data){
+			expect(data).toBeType('string');
+			expect(data.substr(-2)).toEqual(';\n');
+			expect(parseInt(data.slice(0, -2))).toBeType('number');
+			expect(data).toEqual('100;\n');
+			pd.destroy();
+		});
+
+		pd.create();
 
 	});
 

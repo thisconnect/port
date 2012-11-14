@@ -15,8 +15,8 @@ Station.prototype = Object.create(events.prototype);
 Station.prototype.setOptions = function(options){
 	this.options = {
 		host: options.host || 'localhost',
-		read: options.read || 8005, // [netsend]
-		write: options.write || 8006, // [netreceive]
+		read: options.read || null, // [netsend]
+		write: options.write || null, // [netreceive]
 		pd: options.pd 
 			|| (('darwin' == process.platform)
 				? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
@@ -42,7 +42,9 @@ function listen(){
 function create(){
 	var child = this.child = spawn(this.options.pd, this.options.flags);
 	child.on('exit', this.emit.bind(this, 'exit'));
+	// child.stderr.setEncoding(this.options.encoding); // would transform to string
 	child.stderr.on('data', this.emit.bind(this, 'print'));
+	return this;
 }
 
 // on [netsend] connection
@@ -64,9 +66,10 @@ function connect(){
 }
 
 Station.prototype.create = function(){
+	if (!this.options.read) return create.call(this);
 	listen.call(this);
 	this.on('listening', create.bind(this));
-	this.on('connection', connect.bind(this));
+	if (!!this.options.write) this.on('connection', connect.bind(this));
 	return this;
 };
 
