@@ -6,7 +6,11 @@ var net = require('net'),
 function Station(options){
 	if (!(this instanceof Station)) return new Station(options);
 	this.setOptions(options);
-	process.on('exit', this.destroy.bind(this));
+	this.bound = {
+		destroy: this.destroy.bind(this)
+	};
+	process.on('exit', this.bound.destroy);
+//	process.on('exit', this.destroy.bind(this));
 }
 
 
@@ -78,6 +82,7 @@ Station.prototype.destroy = function(){
 	if (!!this.receiver) this.receiver.close();
 	delete this.receiver;
 	if (!!this.child) this.child.kill();
+	process.removeListener('exit', this.bound.destroy);
 	this.emit('destroy');
 	return this;
 };

@@ -1,0 +1,7 @@
+#N canvas 0 22 330 216 10;
+#X obj 42 42 receive in1;
+#X obj 42 82 print out1;
+#X obj 152 42 receive in2;
+#X obj 152 82 print out2;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
