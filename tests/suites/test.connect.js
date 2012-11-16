@@ -103,7 +103,7 @@ Tests.describe('Station connection', function(it){
 	});
 
 
-	it('should establish a one way connection, listening only', function(expect){
+	it('should establish a one way receiving connection', function(expect){
 		expect.perform(4);
 
 		var pd = station({
@@ -117,6 +117,51 @@ Tests.describe('Station connection', function(it){
 			expect(parseInt(data.slice(0, -2))).toBeType('number');
 			expect(data).toEqual('100;\n');
 			pd.destroy();
+		});
+
+		pd.create();
+
+	});
+
+
+	it('should 16 times create and destroy one way receiving connection', function(expect){
+		expect.perform(32);
+
+		var i = 1;
+
+		var pd = station({
+			read: 8025, // [netsend]
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.number.pd']
+		});
+
+		pd.on('error', function(error){
+	//		console.log('\nERROR:', error);
+		});
+
+		pd.on('close', function(){
+	//		console.log('CLOSE', i);
+		});
+
+		pd.on('print', function(buffer){
+	//		console.log('print', i, buffer.toString());
+		});
+
+		pd.on('connection', function(){
+	//		console.log('connection', i);
+		});
+
+		pd.on('data', function(data){
+	//		console.log('data', i, data);
+			expect(data).toBeType('string');
+			expect(data).toEqual('100;\n');
+			pd.destroy();
+		});
+
+		pd.on('destroy', function(){
+	//		console.log('destroy', i);
+			//setTimeout(function(){
+			if (i++ < 16) pd.create();
+			//}, 500);
 		});
 
 		pd.create();

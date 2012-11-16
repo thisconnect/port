@@ -54,16 +54,69 @@ Tests.describe('Station Events', function(it){
 			this.destroy()
 		});
 
+		// fired after destroy completes
+		pd.on('destroy', function(){
+			expect(this).toEqual(pd);
+			expect(this).toBeAnInstanceOf(station);
+		});
+
 		// fires after pd process ends
 		pd.on('exit', function(code, signal){
 			expect(this).toEqual(pd);
 			expect(this).toBeAnInstanceOf(station);
 		});
 
+		pd.create();
+
+	});
+
+
+	it('should detect possible event emitter memory leaks', function(expect){
+		expect.perform(8);
+
+		var i = 1;
+
+		var pd = station({
+			read: 8035, // [netsend]
+			write: 8036, // [netreceive]
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.pd']
+		});
+
+		// receives data from [print]
+		pd.on('print', function(buffer){
+	//		console.log('\nstderr:', i, buffer.toString());
+		});
+
+		// listens for [netsend]
+		pd.on('listening', function(){
+		});
+
+		// [netsend] socket
+		pd.on('connection', function(socket){
+		});
+
+		// [netreceive] socket
+		pd.on('connect', function(socket){
+		//	console.log('connect', i);
+			pd.write('send Hello Pd!;\n');
+		});
+
+		// receives data from [netsend]
+		pd.on('data', function(data){
+		//	console.log('data', i, data);
+			pd.destroy()
+		});
+
 		// fired after destroy completes
 		pd.on('destroy', function(){
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
+			//console.log('destroy', i);
+		});
+
+		// fires after pd process ends
+		pd.on('exit', function(code, signal){
+	//		console.log('exit', i);
+			expect(true).toBe(true);
+			if (i++ < 8) pd.create();
 		});
 
 		pd.create();

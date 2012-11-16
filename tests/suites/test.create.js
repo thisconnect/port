@@ -31,6 +31,29 @@ Tests.describe('Station create', function(it){
 	});
 
 
+	it('should create and destroy Pd process 20 times', function(expect){
+		expect.perform(20);
+
+		var i = 1;
+
+		var pd = station({
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.create.pd']
+		});
+
+		pd.on('print', function(buffer){
+			expect(buffer.toString().trim()).toEqual('print: bang');
+			pd.destroy();
+		});
+
+		pd.on('destroy', function(){
+			if (i++ < 20) pd.create();
+		});
+
+		pd.create();
+
+	});
+
+
 	it('should create a Pd process with -stderr flag and receive data from [print]', function(expect){
 		expect.perform(8);
 
