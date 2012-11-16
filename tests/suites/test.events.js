@@ -71,8 +71,8 @@ Tests.describe('Station Events', function(it){
 	});
 
 
-	it('should detect possible event emitter memory leaks', function(expect){
-		expect.perform(8);
+	it('should create, write and destroy 20 times', function(expect){
+		expect.perform(20);
 
 		var i = 1;
 
@@ -82,42 +82,24 @@ Tests.describe('Station Events', function(it){
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.pd']
 		});
 
-		// receives data from [print]
-		pd.on('print', function(buffer){
-	//		console.log('\nstderr:', i, buffer.toString());
-		});
+		pd.on('print', function(buffer){});
+		pd.on('listening', function(){});
+		pd.on('connection', function(socket){});
 
-		// listens for [netsend]
-		pd.on('listening', function(){
-		});
-
-		// [netsend] socket
-		pd.on('connection', function(socket){
-		});
-
-		// [netreceive] socket
 		pd.on('connect', function(socket){
-		//	console.log('connect', i);
 			pd.write('send Hello Pd!;\n');
 		});
 
-		// receives data from [netsend]
 		pd.on('data', function(data){
-		//	console.log('data', i, data);
+			expect(data).toBe('Hello Pd!;\n');
 			pd.destroy()
 		});
 
-		// fired after destroy completes
 		pd.on('destroy', function(){
-			//console.log('destroy', i);
+			if (i++ < 20) pd.create();
 		});
 
-		// fires after pd process ends
-		pd.on('exit', function(code, signal){
-	//		console.log('exit', i);
-			expect(true).toBe(true);
-			if (i++ < 8) pd.create();
-		});
+		pd.on('exit', function(code, signal){});
 
 		pd.create();
 

@@ -124,7 +124,7 @@ Tests.describe('Station connection', function(it){
 	});
 
 
-	it('should 16 times create and destroy one way receiving connection', function(expect){
+	it('should create and destroy 16 one way connection', function(expect){
 		expect.perform(32);
 
 		var i = 1;
@@ -134,34 +134,19 @@ Tests.describe('Station connection', function(it){
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.number.pd']
 		});
 
-		pd.on('error', function(error){
-	//		console.log('\nERROR:', error);
-		});
-
-		pd.on('close', function(){
-	//		console.log('CLOSE', i);
-		});
-
-		pd.on('print', function(buffer){
-	//		console.log('print', i, buffer.toString());
-		});
-
-		pd.on('connection', function(){
-	//		console.log('connection', i);
-		});
+		pd.on('error', function(error){});
+		pd.on('close', function(){});
+		pd.on('print', function(buffer){});
+		pd.on('connection', function(){});
 
 		pd.on('data', function(data){
-	//		console.log('data', i, data);
 			expect(data).toBeType('string');
 			expect(data).toEqual('100;\n');
 			pd.destroy();
 		});
 
 		pd.on('destroy', function(){
-	//		console.log('destroy', i);
-			//setTimeout(function(){
 			if (i++ < 16) pd.create();
-			//}, 500);
 		});
 
 		pd.create();

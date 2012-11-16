@@ -31,7 +31,7 @@ Tests.describe('Station create', function(it){
 	});
 
 
-	it('should create and destroy Pd process 20 times', function(expect){
+	it('should create and destroy 20 times in a row', function(expect){
 		expect.perform(20);
 
 		var i = 1;
@@ -147,8 +147,7 @@ Tests.describe('Station create', function(it){
 
 		station({
 			flags: ['-noprefs', '-nogui', '-stderr',
-				'-send', 'in1 ' + in1.toString() 
-					+ ';in2 ' + in2.toString(),
+				'-send', 'in1 ' + in1.toString() + ';in2 ' + in2.toString(),
 				'-open', dir + '/suites/test.receivers.pd']
 		})
 		.on('print', function(buffer){
