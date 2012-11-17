@@ -69,9 +69,9 @@ function connect(){
 }
 
 Station.prototype.create = function(){
+	if (!!this.options.write) this.on('connection', this.bound.connect);
 	if (!this.options.read) return create.call(this);
 	this.on('listening', this.bound.create);
-	if (!!this.options.write) this.on('connection', this.bound.connect);
 	listen.call(this);
 	return this;
 };

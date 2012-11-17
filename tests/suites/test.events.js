@@ -15,7 +15,7 @@ Tests.describe('Station Events', function(it){
 		var pd = station({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.echo.pd']
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
 		});
 
 		// listens for [netsend]
@@ -36,7 +36,7 @@ Tests.describe('Station Events', function(it){
 			expect(this).toBeAnInstanceOf(station);
 
 			// sends data to [netreceive]
-			this.write('Hello Pd!;\n');
+			this.write('send Hello Pd!;\n');
 		});
 
 		// receives data from [print]
@@ -77,9 +77,9 @@ Tests.describe('Station Events', function(it){
 		var i = 1;
 
 		var pd = station({
-			read: 8035, // [netsend]
-			write: 8036, // [netreceive]
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.pd']
+			read: 8015, // [netsend]
+			write: 8016, // [netreceive]
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
 		});
 
 		pd.on('print', function(buffer){});

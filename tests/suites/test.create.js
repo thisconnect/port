@@ -13,7 +13,7 @@ Tests.describe('Station create', function(it){
 		expect.perform(4);
 
 		var pd = station({
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.create.pd']
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.loadbang.pd']
 		});
 
 		expect(pd).toBeAnInstanceOf(station);
@@ -37,7 +37,7 @@ Tests.describe('Station create', function(it){
 		var i = 1;
 
 		var pd = station({
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.create.pd']
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.loadbang.pd']
 		});
 
 		pd.on('print', function(buffer){
@@ -58,7 +58,7 @@ Tests.describe('Station create', function(it){
 		expect.perform(8);
 
 		var pd = station({
-			flags: ['-noprefs', '-stderr', dir + '/suites/test.create.pd']
+			flags: ['-noprefs', '-stderr', dir + '/suites/test.loadbang.pd']
 		});
 
 		expect(pd).toBeAnInstanceOf(station);
@@ -87,7 +87,11 @@ Tests.describe('Station create', function(it){
 		expect.perform(3);
 
 		station({
-			flags: ['-noprefs', '-nogui', '-send', 'node hi Pd!', '-open', dir + '/suites/test.receive.pd']
+			flags: [
+				'-noprefs', '-nogui',
+				'-send', 'node hi Pd!',
+				'-open', dir + '/suites/test.receive.pd'
+			]
 		})
 		.on('print', function(buffer){
 			expect(buffer).toBeType('object');
@@ -146,9 +150,11 @@ Tests.describe('Station create', function(it){
 			};
 
 		station({
-			flags: ['-noprefs', '-nogui', '-stderr',
+			flags: [
+				'-noprefs', '-nogui', '-stderr',
 				'-send', 'in1 ' + in1.toString() + ';in2 ' + in2.toString(),
-				'-open', dir + '/suites/test.receivers.pd']
+				'-open', dir + '/suites/test.receivers.pd'
+			]
 		})
 		.on('print', function(buffer){
 			var packet = buffer.toString().split('\n');

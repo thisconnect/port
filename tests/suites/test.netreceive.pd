@@ -1,0 +1,9 @@
+#N canvas 20 22 367 217 10;
+#X floatatom 127 71 5 0 0 0 - - -;
+#X obj 27 71 print;
+#X obj 27 31 netreceive 8046;
+#X obj 207 31 loadbang;
+#X obj 207 71 print ready;
+#X connect 2 0 1 0;
+#X connect 2 1 0 0;
+#X connect 3 0 4 0;

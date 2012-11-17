@@ -38,7 +38,7 @@ Tests.describe('Station connection', function(it){
 		var pd = station({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.echo.pd']
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
 		});
 
 		// [netreceive] socket
@@ -47,7 +47,7 @@ Tests.describe('Station connection', function(it){
 			expect(this.write).toBeType('function');
 			expect(pd.write).toBeType('function');
 			// sends data to [netreceive]
-			socket.write('Hello Pd!;\n');
+			socket.write('send Hello Pd!;\n');
 		});
 
 		// receives data from [netsend]
@@ -79,7 +79,7 @@ Tests.describe('Station connection', function(it){
 		var two = station({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.echo.pd']
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
 		});
 
 		two.on('data', function(data){
@@ -90,7 +90,7 @@ Tests.describe('Station connection', function(it){
 		});
 
 		two.on('connect', function(socket){
-			socket.write('Hello Pd!;\n');
+			socket.write('send Hello Pd!;\n');
 		});
 
 		one.on('connect', function(socket){
@@ -103,12 +103,41 @@ Tests.describe('Station connection', function(it){
 	});
 
 
-	it('should establish a one way receiving connection', function(expect){
+	it('should establish a oneway sending connection', function(expect){
+		expect.perform(3);
+
+		var pd = station({
+			write: 8046, // [netreceive]
+			flags: ['-noprefs', '-stderr', dir + '/suites/test.netreceive.pd']
+		});
+
+		pd.on('connect', function(){
+			pd.write('hi Pd!;\n');
+		});
+
+		pd.on('print', function(buffer){
+			expect(buffer).toBeType('object');
+			buffer = buffer.toString();
+			if (buffer.trim() == 'ready: bang'){
+				// if there is no read socket manually fire the connection event
+				pd.emit('connection');
+			} else {
+				expect(buffer).toEqual('print: hi Pd!\n');
+				pd.destroy();
+			}
+		});
+
+		pd.create();
+
+	});
+
+
+	it('should establish a oneway receiving connection', function(expect){
 		expect.perform(4);
 
 		var pd = station({
 			read: 8025, // [netsend]
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.number.pd']
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.pd']
 		});
 
 		pd.on('data', function(data){
@@ -124,6 +153,29 @@ Tests.describe('Station connection', function(it){
 	});
 
 
+	it('should receive data from 2 [netsend] objects', function(expect){
+		expect.perform(3);
+
+		var result = 0;
+
+		station({
+			read: 8035, // [netsend]
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsends.pd']
+		})
+		.on('data', function(data){
+			data = parseInt(data.slice(0, -2));
+			expect(data).toBeType('number');
+			result += data;
+			if (result == 3) this.destroy();
+		})
+		.on('destroy', function(){
+			expect(result).toEqual(3);
+		})
+		.create();
+
+	});
+
+
 	it('should create and destroy 16 one way connection', function(expect){
 		expect.perform(32);
 
@@ -131,7 +183,7 @@ Tests.describe('Station connection', function(it){
 
 		var pd = station({
 			read: 8025, // [netsend]
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.number.pd']
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.pd']
 		});
 
 		pd.on('error', function(error){});

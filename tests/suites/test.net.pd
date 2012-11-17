@@ -1,0 +1,14 @@
+#N canvas 20 22 659 191 10;
+#X obj 287 31 loadbang;
+#X obj 197 71 netsend;
+#X obj 197 31 r send;
+#X floatatom 197 111 5 0 0 0 - - -;
+#X floatatom 127 71 5 0 0 0 - - -;
+#X obj 27 71 s send;
+#X obj 27 31 netreceive 8016;
+#X msg 287 71 \; send connect localhost 8015;
+#X connect 0 0 7 0;
+#X connect 1 0 3 0;
+#X connect 2 0 1 0;
+#X connect 6 0 5 0;
+#X connect 6 1 4 0;
