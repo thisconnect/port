@@ -17,6 +17,9 @@ var tests = [{
 		input: ['cold -0.5', 'hot 0.1'],
 		expect: -0.2
 	}, {
+		input: ['cold 0', 'hot 1'],
+		expect: 0 // whoot?
+	}, {
 		input: ['hot 40 4'],
 		expect: 10
 	}, {
@@ -31,14 +34,17 @@ var tests = [{
 		// expects error:
 		// error: /: no method for 'symbol'
 	}, {
+		input: ['hot a b']
+		// expects error:
+		// error: /: no method for 'a'
+	}, {
 		input: ['cold b']
 		// expects error:
 		// error: inlet: expected 'float' but got 'b'
 	}
 ];
 
-console.log('should log 5 passed, 1 failed and 2 errors\n');
-
+console.log('expect to run ' + tests.length + ' tests. 6 passing, 1 failing and 3 to error\n');
 
 var i = -1;
 
@@ -51,13 +57,11 @@ var pd = station({
 	read: 8105, // [netsend]
 	write: 8106, // [netreceive]
 	flags: [
-		'-noprefs', '-stderr', '-nogui', 
-		'-send', 'netsend connect localhost 8105',
+		'-noprefs', '-stderr', '-nogui', '-send', 'netsend connect localhost 8105',
 		'-open', dir + '/test-division.pd'
 	]
 }).on('print', function(buffer){
-	var data = buffer.toString(),
-		result = data.match(/^result:\s(.+)/);
+	var data = buffer.toString(), result = data.match(/^result:\s(.+)/);
 	if (!!result){
 		console.log(
 			result[1] == tests[i].expect ? 'PASSED' : 'FAILED',
@@ -67,9 +71,8 @@ var pd = station({
 			'\n'
 		);
 		return run();
-	} else {
-		console.log(data);
 	}
+	console.log(data);
 	if (data.match(/^error:(.+)/)) run();
 }).on('connect', run).create();
 
