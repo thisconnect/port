@@ -21,7 +21,7 @@ var server = http.createServer(function(req, res){
 			'<!doctype html>',
 			'<meta charset="utf-8">',
 			'<title>Oscilloscope Example with Station</title>',
-			'<canvas id=osci width=640 height=480></canvas>',
+			'<canvas id=osci width=1024 height=480></canvas>',
 			'<script src="/socket.io/socket.io.js"></script>',
 			'<script src="/client.js"></script>\n'
 		].join('\n'));
@@ -55,7 +55,7 @@ var pd = station({
 	'-open', dir + '/audioin.pd']
 })
 .on('connect', function(){
-	this.write('dump 64;\n');
+	this.write('run 1;\n');
 })
 .on('data', function(data){
 	var i, l;
@@ -66,9 +66,6 @@ var pd = station({
 	}
 
 	if (!!client) client.emit('data', data);
-
-	// request the next block
-	this.write('dump 64;\n');
 })
 .on('print', function(buffer){
 	//console.log('print', buffer.toString());
