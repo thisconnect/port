@@ -3,7 +3,7 @@ var canvas = document.getElementById('osci'),
 	block = 0;
 
 context.fillStyle = '#000';
-context.fillRect(0, 0, 1024, 480);
+context.fillRect(0, 0, 1024, 480); // canvas.width canvas.height
 
 var socket = io.connect();
 
