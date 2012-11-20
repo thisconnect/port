@@ -3,7 +3,7 @@
 // or node test-division.js
 
 var path = require('path'),
-	station = require('../station');
+	station = require('../../station');
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
@@ -58,7 +58,7 @@ var pd = station({
 	write: 8106, // [netreceive]
 	flags: [
 		'-noprefs', '-stderr', '-nogui', '-send', 'netsend connect localhost 8105',
-		'-open', dir + '/test-division.pd'
+		'-open', dir + '/division.pd'
 	]
 }).on('print', function(buffer){
 	var data = buffer.toString(), result = data.match(/^result:\s(.+)/);
