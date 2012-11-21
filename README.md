@@ -1,7 +1,7 @@
 Station
 =======
 
-Runs an audio engine and provides a socket connection to send and receive data.
+Node.js module to communicate with Pd (aka Pure Data).
 
 
 Example
@@ -20,7 +20,10 @@ pd.create();
 
 pd.on('connect', function(){
 	this.write('Hello Pd!;\n');
-	this.destroy();
+});
+
+pd.on('data', function(data){
+	console.log(data);
 });
 ```
 
