@@ -33,20 +33,15 @@ Methods
 ```js
 var pd = Station(options);
 ```
-or
-
-```js
-var pd = Station();
-```
 
 #### Options:
 
-	- `host` - the domain of the Pd process. Defaults to localhost.
-	- `read` - the port number for Pd's [netsend] to send data to the Station. Defaults to null.
-	- `write` - the port number for Station to send data to Pd's [netreceive]. Defaults to null.
-	- `pd` - the command or location to spawn the Pd process. Defaults to an absolute path to the Pd binary on OS X. Defaults to pd on Linux.
-	- `flags` - the command line arguments for the Pd process. Expects an array of arguments. Read more about Pd's configuration flags on http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4 . Defaults to ['-noprefs', '-stderr', './station.pd']
-	- `encoding` - the default encoding of the read and write socket, http://nodejs.org/api/stream.html#stream_stream_setencoding_encoding . WARNING: subject to change: in future versions null might expose the Buffer. Defaults to 'ascii'.
+  - `host` - the domain of the Pd process. Defaults to localhost.
+  - `read` - the port number for Pd's [netsend] to send data to the Station. Defaults to null.
+  - `write` - the port number for Station to send data to Pd's [netreceive]. Defaults to null.
+  - `pd` - the command or location to spawn the Pd process. Defaults to an absolute path to the Pd binary on OS X. Defaults to pd on Linux.
+  - `flags` - the command line arguments for the Pd process. Expects an array of arguments. Read more about Pd's configuration flags on http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4 . Defaults to ['-noprefs', '-stderr', './station.pd']
+  - `encoding` - the default encoding of the read and write socket, http://nodejs.org/api/stream.html#stream_stream_setencoding_encoding . WARNING: subject to change: in future versions null might expose the Buffer. Defaults to 'ascii'.
 
 
 
@@ -78,7 +73,7 @@ pd.write('Hello Pd!;\n');
 
 #### Arguments:
 
-1. Message (string) - the packet to send to the write socket. FUDI messages have to end with `;\n`
+1. Data (string) - the packet to send to the write socket. FUDI messages are delimited and end with `;\n`
 
 
 
@@ -91,7 +86,7 @@ Station is an event emitter see also http://nodejs.org/api/events.html
 
 ### Event: listening
 
-Fires after Station.create is called and read port is specified. At this point Station is waiting for an incoming connection from Pd's [netsend].
+Fires if read port is specified and after Station.create is called. At this moment Station is waiting for an incoming connection from Pd's [netsend].
 
 ```js
 pd.on('listening', function(){ });
@@ -101,7 +96,7 @@ pd.on('listening', function(){ });
 
 ### Event: connection
 
-Fires when Pd's [netsend] connects to the read port. 
+Fires when Pd connects on the read port. 
 
 ```js
 pd.on('connection', function(socket){ });
@@ -109,13 +104,13 @@ pd.on('connection', function(socket){ });
 
 #### Arguments:
 
-1. Exposes the socket object
+1. Socket (object) - Exposes the socket object connecting to [netsend]
 
 
 
 ### Event: connect
 
-Fires when Station connects to Pd's [netreceive] on the write port. 
+Fires when Station connects to Pd on the write port. 
 
 ```js
 pd.on('connect', function(socket){ });
@@ -123,13 +118,13 @@ pd.on('connect', function(socket){ });
 
 #### Arguments:
 
-1. Socket (object) - Exposes the socket object
+1. Socket (object) - Exposes the socket object connecting to [netreceive]
 
 
 
 ### Event: data
 
-Fires when Pd sends messages with [netsend]. 
+Fires when Pd sends a message with [netsend]. 
 
 ```js
 pd.on('data', function(data){ });
@@ -162,7 +157,6 @@ Fires after the destroy method is called.
 ```js
 pd.on('destroy', function(){ });
 ```
-
 
 
 
