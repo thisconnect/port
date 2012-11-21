@@ -11,25 +11,32 @@ socket.on('connect', function(){
 	// console.log('connected');
 });
 
-var down = false;
 
-window.addEventListener('mouseup', function(e){ down = false; });
-
-canvas.addEventListener('mousedown', function(e){ down = true; });
-
-canvas.addEventListener('mousemove', function(e){
+function change(e){
 	if (down && socket.socket.connected){
 		var x = parseInt(e.clientX / blockWidth) - 1,
-			y = (e.clientY / (canvas.height * -0.5)) + 1;
+			y = 1 - (e.clientY / canvas.height);
 		
-		//console.log(x, y);
+		console.log(x, y);
+
 		socket.emit('data', x, y);
 		
 		context.fillStyle = '#000';
-		context.fillRect(x * blockWidth, 0, 10, canvas.height);
+		context.fillRect(x * blockWidth, 0, blockWidth, canvas.height);
 
 		context.fillStyle = '#fc0';
-		context.fillRect(x * blockWidth, canvas.height * 0.5, 10, -y * canvas.height * 0.5);
+		context.fillRect(x * blockWidth, e.clientY, blockWidth, canvas.height);
 	}
+}
+
+var down = false;
+
+window.addEventListener('mouseup', function(){ down = false; });
+
+canvas.addEventListener('mousedown', function(e){
+	down = true;
+	change(e);
 });
+
+canvas.addEventListener('mousemove', change);
 
