@@ -16,6 +16,7 @@ function Station(options){
 
 Station.prototype = Object.create(events.prototype);
 
+
 Station.prototype.setOptions = function(options){
 	this.options = {
 		host: options.host || 'localhost',
@@ -25,10 +26,8 @@ Station.prototype.setOptions = function(options){
 			|| (('darwin' == process.platform)
 				? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
 				: 'pd'),
-		// see command line arguments for pd
-		// http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4
 		flags: options.flags || ['-noprefs', '-stderr', './station.pd'],
-		encoding: options.encoding || 'ascii' // 'utf8', 'base64'
+		encoding: options.encoding || 'ascii' // 'utf8', 'base64', 'hex'
 	};
 };
 
