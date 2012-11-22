@@ -7,6 +7,7 @@ var path = require('path'),
 	socketio = require('socket.io'),
 	station = require('../../station');
 
+// whats my ip?
 //console.log('ip', require('os').networkInterfaces().en1[1].address);
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
@@ -43,12 +44,11 @@ var server = http.createServer(function(req, res){
 	}
 }).listen(8118);
 
-console.log('Server running at http://127.0.0.1:8118/');
+console.log('Server running at http://localhost:8118/');
 
 
 
-// create the station
-
+// station setup
 var pd = station({
 	read: 8125, // [netsend]
 	write: 8126, // [netreceive]
@@ -56,14 +56,13 @@ var pd = station({
 	'-open', dir + '/wavetable.pd']
 })
 .on('print', function(buffer){
-	//console.log('print', buffer.toString());
+	console.log('print', buffer.toString());
 })
 .create();
 
 
 
-// create a socket.io instance to receive data from the client
-
+// use socket.io to receive data from clients
 var io = socketio.listen(server, {
 	'transports': ['websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling'],
 	'log level': 1,
@@ -76,6 +75,8 @@ io.on('connection', function(socket){
 
 	socket.on('data', function(x, y){
 		//console.log('position', x, y);
+		
+		// x, y to FUDI
 		pd.write([x, y].join(' ') + ';\n');
 	});
 });
