@@ -10,7 +10,7 @@ var path = require('path'),
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
-
+console.log('WARNING', 'this example is not optimized and probably requires a lot CPU power');
 
 // create a http server to deliver the client side
 
