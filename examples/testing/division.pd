@@ -11,6 +11,9 @@
 #X obj 277 111 s hot;
 #X obj 337 111 s cold;
 #X obj 137 111 print result;
+#X obj 467 31 loadbang;
+#X obj 467 111 print;
+#X msg 467 71 message form test patch;
 #X connect 0 0 1 0;
 #X connect 2 0 11 0;
 #X connect 3 0 2 0;
@@ -20,3 +23,5 @@
 #X connect 6 1 7 0;
 #X connect 8 0 9 0;
 #X connect 8 1 10 0;
+#X connect 12 0 14 0;
+#X connect 14 0 13 0;
