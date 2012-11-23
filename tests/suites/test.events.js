@@ -79,6 +79,7 @@ Tests.describe('Station Events', function(it){
 		var pd = station({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
+			encoding: 'ascii',
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
 		});
 

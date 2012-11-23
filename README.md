@@ -10,26 +10,23 @@ Example
 ```js
 var Station = require('station');
 
-var pd = Station({
+Station({
 	read: 8004,
 	write: 8005,
-	flags: ['-noprefs', '-nogui', '-send', 'run 1', '-open', './mypatch.pd']
-});
-
-pd.create();
-
-pd.on('connect', function(){
+	flags: ['-noprefs', '-send', 'pd dsp 1, dsp 0', '-open', './mypatch.pd']
+})
+.create()
+.on('connect', function(){
 	this.write('Hello Pd!;\n');
-});
-
-pd.on('data', function(data){
+})
+.on('data', function(data){
 	console.log(data);
 });
 ```
 
 
-Methods
--------
+API
+---
 
 ### Constructor: Station
 
@@ -40,17 +37,33 @@ var pd = Station(options);
 #### Options:
 
   - `host` - the domain of the Pd process. Defaults to localhost.
-  - `read` - the port number for Pd's [netsend] to send data to the Station. Defaults to null.
-  - `write` - the port number for Station to send data to Pd's [netreceive]. Defaults to null.
-  - `pd` - the command or location to spawn the Pd process. Defaults to an absolute path to the Pd binary on OS X. Defaults to pd on Linux.
-  - `flags` - the command line arguments for the Pd process. Expects an array of arguments. Read more about Pd's configuration flags on http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4 . Defaults to ['-noprefs', '-stderr', './station.pd']
-  - `encoding` - the default encoding of the read and write socket, http://nodejs.org/api/stream.html#stream_stream_setencoding_encoding . WARNING: subject to change: in future versions null might expose the Buffer. Defaults to 'ascii'.
+  - `read` - the port number for Pd's [netsend] to send data to the Station. 
+  Defaults to null.
+  - `write` - the port number for Station to send data to Pd's [netreceive]. 
+  Defaults to null.
+  - `pd` - the command or location to spawn the Pd process. 
+  Defaults to an absolute path to the Pd binary on OS X. Defaults to pd on Linux.
+  - `flags` - the command line arguments for the Pd process. 
+  Expects an array of arguments. Read more about Pd's configuration flags on 
+  http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4 . 
+  Defaults to []
+  - `encoding` - the default encoding of the read and write socket, 
+  http://nodejs.org/api/stream.html#stream_stream_setencoding_encoding . 
 
+
+
+
+Methods
+-------
 
 
 ### Method: Station.create
 
-Spawns the Pd process. Wait for incoming socket connection then connect to write socket (if port options are not null).
+1. Spawns the Pd process.
+2. Listens for an incoming socket connection.
+3. Connects to on the write port.
+
+Each of the 3 steps are individually executed depending on the configuraion options.
 
 ```js
 pd.create();
@@ -68,7 +81,9 @@ pd.destroy();
 
 ### Method: Station.write
 
-Sends a paket containing one or many messages to Pd's [netreceive]. 
+Sends a paket containing one or many messages to Pd's [netreceive].
+
+WARNING: write does not check if the write socket is ready and may error!
 
 ```js
 pd.write('Hello Pd!;\n');
@@ -76,7 +91,7 @@ pd.write('Hello Pd!;\n');
 
 #### Arguments:
 
-1. Data (string) - the packet to send to the write socket. FUDI messages are delimited and end with `;\n`
+1. Data (string) - the packet to send to the write socket.
 
 
 
@@ -89,7 +104,8 @@ Station is an event emitter see also http://nodejs.org/api/events.html
 
 ### Event: listening
 
-Fires if read port is specified and after Station.create is called. At this moment Station is waiting for an incoming connection from Pd's [netsend].
+Fires if the read port is specified and after Station.create is called. 
+At this point Station is awaiting an incoming connection from Pd's [netsend].
 
 ```js
 pd.on('listening', function(){ });
@@ -121,7 +137,7 @@ pd.on('connect', function(socket){ });
 
 #### Arguments:
 
-1. Socket (object) - Exposes the socket connection to [netreceive]
+1. Socket (object) - Exposes the socket connection to [netreceive].
 
 
 
@@ -135,13 +151,14 @@ pd.on('data', function(data){ });
 
 #### Arguments:
 
-1. Data - the actual message
+1. Data - a buffer object or a string if encoding is not null.
 
 
 
 ### Event: stderr
 
-Fires on every message that is written to the console the [print] object or anything else. This event is only available with `-stderr` or `-nogui` flag.
+Fires on every message that is written to the console the [print] object 
+or anything else. This event is only available with `-stderr` or `-nogui` flag.
 
 ```js
 pd.on('stderr', function(buffer){ });
@@ -165,7 +182,8 @@ pd.on('destroy', function(){ });
 Run tests
 ---------
 
-To run the tests first install testigo `git submodule update --init --recursive` or download it from [github.com/keeto/testigo](https://github.com/keeto/testigo) to tests/testigo.
+To run the tests first install testigo `git submodule update --init --recursive` 
+or download it from [github.com/keeto/testigo](https://github.com/keeto/testigo) to tests/testigo.
 
 	node tests/run.js
 

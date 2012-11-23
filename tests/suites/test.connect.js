@@ -38,6 +38,7 @@ Tests.describe('Station connection', function(it){
 		var pd = station({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
+			encoding: 'ascii',
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
 		});
 
@@ -62,6 +63,32 @@ Tests.describe('Station connection', function(it){
 	});
 
 
+	it('should pass the raw buffer object if no encoding is specified', function(expect){
+		expect.perform(2);
+
+		var pd = station({
+			read: 8015, // [netsend]
+			write: 8016, // [netreceive]
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
+		});
+
+		pd.on('connect', function(socket){
+			// sends data to [netreceive]
+			socket.write('send Hello Pd!;\n');
+		});
+
+		// receives data from [netsend]
+		pd.on('data', function(data){
+			expect(data).toBeType('object');
+			expect(data).toHaveProperty('length');
+			pd.destroy();
+		});
+
+		pd.create();
+
+	});
+
+
 	it('should connect to two Pd instances in parallel', function(expect){
 		expect.perform(3);
 
@@ -74,6 +101,7 @@ Tests.describe('Station connection', function(it){
 		var two = station({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
+			encoding: 'ascii',
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
 		});
 
@@ -132,6 +160,7 @@ Tests.describe('Station connection', function(it){
 
 		var pd = station({
 			read: 8025, // [netsend]
+			encoding: 'ascii',
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.pd']
 		});
 
@@ -155,6 +184,7 @@ Tests.describe('Station connection', function(it){
 
 		station({
 			read: 8035, // [netsend]
+			encoding: 'ascii',
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsends.pd']
 		})
 		.on('data', function(data){
@@ -178,6 +208,7 @@ Tests.describe('Station connection', function(it){
 
 		var pd = station({
 			read: 8025, // [netsend]
+			encoding: 'ascii',
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.pd']
 		});
 
@@ -211,6 +242,7 @@ Tests.describe('Station connection', function(it){
 		station({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
+			encoding: 'ascii',
 			pd: null // prevents spawning the pd process
 		})
 		.on('listening', function(){

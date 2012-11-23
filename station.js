@@ -22,12 +22,12 @@ Station.prototype.setOptions = function(options){
 		host: options.host || 'localhost',
 		read: options.read || null, // [connect <port>( -> [netsend]
 		write: options.write || null, // [netreceive <port>]
+		encoding: options.encoding || null, // 'ascii', 'utf8', 'base64', 'hex'
 		pd: ('pd' in options) ? options.pd
 			: (('darwin' == process.platform)
 				? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
 				: 'pd'),
-		flags: options.flags || [], // ['-noprefs', '-stderr', './station.pd']
-		encoding: options.encoding || 'ascii' // 'utf8', 'base64', 'hex'
+		flags: options.flags || [] // ['-noprefs', '-stderr', './station.pd']
 	};
 };
 
@@ -45,8 +45,8 @@ function listen(){
 function create(){
 	if (!this.options.pd) return this;
 	var child = this.child = spawn(this.options.pd, this.options.flags);
+	if (!!this.options.encoding) child.stderr.setEncoding(this.options.encoding);
 	child.on('exit', this.emit.bind(this, 'exit'));
-	// child.stderr.setEncoding(this.options.encoding); // would transform to string
 	child.stderr.on('data', this.emit.bind(this, 'stderr'));
 	return this;
 }
@@ -54,7 +54,7 @@ function create(){
 // on [netsend] connection
 function connection(socket){
 	this.socket = socket;
-	socket.setEncoding(this.options.encoding);
+	if (!!this.options.encoding) socket.setEncoding(this.options.encoding);
 	socket.on('data', this.emit.bind(this, 'data'));
 	this.emit('connection', socket);
 }
@@ -62,7 +62,7 @@ function connection(socket){
 // connect to [netreceive]
 function connect(){
 	var sender = this.sender = new net.Socket();
-	sender.setEncoding(this.options.encoding);
+	if (!!this.options.encoding) sender.setEncoding(this.options.encoding);
 	sender.on('connect', this.emit.bind(this, 'connect', sender));
 	sender.on('error', this.emit.bind(this, 'error'));
 	this.sender.connect(this.options.write, this.options.host);
