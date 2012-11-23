@@ -7,8 +7,9 @@ var path = require('path'),
 	socketio = require('socket.io'),
 	station = require('../../station');
 
-// whats my ip?
-//console.log('ip', require('os').networkInterfaces().en1[1].address);
+// console.log(require('os').networkInterfaces());
+//var last = require('os').networkInterfaces().en1.length;
+//console.log('browse to http://' + require('os').networkInterfaces().en1[last - 1].address + ':8118');
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
@@ -44,7 +45,6 @@ var server = http.createServer(function(req, res){
 	}
 }).listen(8118);
 
-console.log('Server running at http://localhost:8118/');
 
 
 

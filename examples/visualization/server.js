@@ -10,7 +10,6 @@ var path = require('path'),
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
-console.log('WARNING', 'this example is not optimized and probably requires a lot CPU power');
 
 // create a http server to deliver the client side
 
@@ -40,9 +39,11 @@ var server = http.createServer(function(req, res){
 		res.writeHead(404, {'Content-Type': 'text/html'});
 		res.end('<h1>Not Found</h1>\n');
 	}
-}).listen(8118, '127.0.0.1');
+}).listen(8118, 'localhost');
 
-console.log('Server running at http://127.0.0.1:8118/');
+console.log('Server running at http://localhost:8118/');
+
+console.log('WARNING', 'this example is not optimized and probably requires a lot CPU power');
 
 
 
