@@ -185,6 +185,7 @@ Tests.describe('Station connection', function(it){
 		station({
 			read: 8035, // [netsend]
 			encoding: 'ascii',
+			max: 2,
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsends.pd']
 		})
 		.on('data', function(data){
@@ -201,7 +202,33 @@ Tests.describe('Station connection', function(it){
 	});
 
 
-	it('should create and destroy 16 one way connection', function(expect){
+	it('should limit the incoming connections to 1', function(expect){
+		expect.perform(3);
+
+		var result = 0;
+
+		var pd = station({
+			read: 8035, // [netsend]
+			//encoding: 'ascii',
+			max: 1,
+			flags: ['-noprefs', '-stderr', dir + '/suites/test.netsends.pd']
+		})
+		.on('data', function(buffer){
+			var data = buffer.slice(0, 1);
+			expect(data.toString()).toBeType('string');
+			expect(data).toEqual(1);
+			result += data;
+			setTimeout(function(){ pd.destroy(); }, 500);
+		})
+		.on('destroy', function(){
+			expect(result).toEqual(1);
+		})
+		.create();
+
+	});
+
+
+	it('should create and destroy a one way connection 16 times in a row', function(expect){
 		expect.perform(32);
 
 		var i = 1;

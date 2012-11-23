@@ -23,6 +23,7 @@ Station.prototype.setOptions = function(options){
 		read: options.read || null, // [connect <port>( -> [netsend]
 		write: options.write || null, // [netreceive <port>]
 		encoding: options.encoding || null, // 'ascii', 'utf8', 'base64', 'hex'
+		max: ('max' in options) ? options.max : 1, // max connections
 		pd: ('pd' in options) ? options.pd
 			: (('darwin' == process.platform)
 				? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
@@ -34,7 +35,7 @@ Station.prototype.setOptions = function(options){
 // listen for [netsend]
 function listen(){
 	var receiver = this.receiver = net.createServer();
-	// receiver.maxConnections = 1;
+	if (!!this.options.max) receiver.maxConnections = this.options.max;
 	receiver.listen(this.options.read, this.options.host);
 	receiver.on('listening', this.emit.bind(this, 'listening'));
 	receiver.on('connection', connection.bind(this));
