@@ -22,8 +22,8 @@ Station.prototype.setOptions = function(options){
 		host: options.host || 'localhost',
 		read: options.read || null, // [netsend]
 		write: options.write || null, // [netreceive]
-		pd: options.pd 
-			|| (('darwin' == process.platform)
+		pd: ('pd' in options) ? options.pd
+			: (('darwin' == process.platform)
 				? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
 				: 'pd'),
 		flags: options.flags || ['-noprefs', '-stderr', './station.pd'],
@@ -43,6 +43,7 @@ function listen(){
 
 // start pd process
 function create(){
+	if (!this.options.pd) return this;
 	var child = this.child = spawn(this.options.pd, this.options.flags);
 	child.on('exit', this.emit.bind(this, 'exit'));
 	// child.stderr.setEncoding(this.options.encoding); // would transform to string
@@ -69,7 +70,7 @@ function connect(){
 
 Station.prototype.create = function(){
 	if (!!this.options.write) this.on('connection', this.bound.connect);
-	if (!this.options.read) return create.call(this);
+	if (!this.options.read) return this.bound.create();
 	this.on('listening', this.bound.create);
 	listen.call(this);
 	return this;

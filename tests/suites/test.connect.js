@@ -33,7 +33,7 @@ Tests.describe('Station connection', function(it){
 
 
 	it('should echo messages sent to Pd', function(expect){
-		expect.perform(6);
+		expect.perform(5);
 
 		var pd = station({
 			read: 8015, // [netsend]
@@ -54,12 +54,7 @@ Tests.describe('Station connection', function(it){
 		pd.on('data', function(data){
 			expect(data).toBeType('string');
 			expect(data).toEqual('Hello Pd!;\n');
-			pd.destroy()
-		});
-
-		// fires after pd process ends
-		pd.on('exit', function(code, signal){
-			expect(arguments.length).toBe(2);
+			pd.destroy();
 		});
 
 		pd.create();
@@ -202,6 +197,43 @@ Tests.describe('Station connection', function(it){
 		});
 
 		pd.create();
+
+	});
+
+
+	it('should connect, but not internally spawn Pd', function(expect){
+		expect.perform(2);
+
+		var spawn = require('child_process').spawn;
+
+		var pdprocess = null;
+
+		station({
+			read: 8015, // [netsend]
+			write: 8016, // [netreceive]
+			pd: null // prevents spawning the pd process
+		})
+		.on('listening', function(){
+			var location = ('darwin' == process.platform)
+				? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
+				: 'pd';
+
+			// spawn pd manually
+			pdprocess = spawn(location, ['-noprefs', '-nogui', dir + '/suites/test.net.pd']);
+		})
+		.on('connect', function(socket){
+			this.write('send Gday Pd!;\n');
+		})
+		.on('data', function(data){
+			expect(data).toBeType('string');
+			expect(data).toEqual('Gday Pd!;\n');
+			this.destroy();
+		})
+		.on('destroy', function(){
+			pdprocess.kill();
+			pdprocess = null;
+		})
+		.create();
 
 	});
 

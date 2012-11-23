@@ -72,7 +72,7 @@ Tests.describe('Station Events', function(it){
 
 
 	it('should create, write and destroy 20 times', function(expect){
-		expect.perform(20);
+		expect.perform(40);
 
 		var i = 1;
 
@@ -99,7 +99,9 @@ Tests.describe('Station Events', function(it){
 			if (i++ < 20) pd.create();
 		});
 
-		pd.on('exit', function(code, signal){});
+		pd.on('exit', function(code, signal){
+			expect(arguments.length).toBe(2);
+		});
 
 		pd.create();
 

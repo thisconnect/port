@@ -177,7 +177,6 @@ Tests.describe('Station create', function(it){
 		})
 		.create();
 
-
 	});
 
 });
