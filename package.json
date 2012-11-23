@@ -1,6 +1,6 @@
 {
 	"name": "station"
-    , "version": "0.5.0-dev"
+    , "version": "0.6.0"
     , "author": "Enrique Erne (http://mild.ch/)"
     , "contributors": [
 		{"name": "Enrique Erne"}
