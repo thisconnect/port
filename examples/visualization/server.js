@@ -52,6 +52,7 @@ console.log('WARNING', 'this example is not optimized and probably requires a lo
 var pd = station({
 	read: 8115, // [netsend]
 	write: 8116, // [netreceive]
+	encoding: 'ascii',
 	flags: ['-noprefs', '-stderr', '-nogui',
 	'-open', dir + '/audioin.pd']
 })
@@ -68,8 +69,8 @@ var pd = station({
 
 	if (!!client) client.emit('data', data);
 })
-.on('print', function(buffer){
-	//console.log('print', buffer.toString());
+.on('stderr', function(buffer){
+	// console.log('print', buffer.toString());
 });
 
 

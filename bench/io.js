@@ -6,6 +6,7 @@ var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 station({
 	read: 8205, // [netsend]
 	write: 8206, // [netreceive]
+	encoding: 'ascii',
 	flags: ['-noprefs', '-stderr', '-nogui', '-open', dir + '/io.pd']
 })
 .on('connect', function(){
