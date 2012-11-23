@@ -7,11 +7,10 @@ var path = require('path'),
 	socketio = require('socket.io'),
 	station = require('../../station');
 
-// console.log(require('os').networkInterfaces());
-//var last = require('os').networkInterfaces().en1.length;
-//console.log('browse to http://' + require('os').networkInterfaces().en1[last - 1].address + ':8118');
-
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
+
+var last = require('os').networkInterfaces().en1.length;
+console.log('\nbrowse to http://' + require('os').networkInterfaces().en1[last - 1].address + ':8118');
 
 
 
@@ -46,8 +45,6 @@ var server = http.createServer(function(req, res){
 }).listen(8118);
 
 
-
-
 // station setup
 var pd = station({
 	read: 8125, // [netsend]
@@ -55,11 +52,10 @@ var pd = station({
 	flags: ['-noprefs', // '-stderr', '-nogui',
 	'-open', dir + '/wavetable.pd']
 })
-.on('print', function(buffer){
-	console.log('print', buffer.toString());
+.on('stderr', function(buffer){
+	console.log(buffer.toString());
 })
 .create();
-
 
 
 // use socket.io to receive data from clients
@@ -71,8 +67,6 @@ var io = socketio.listen(server, {
 });
 
 io.on('connection', function(socket){
-	//console.log('socket.io client connection');
-
 	socket.on('data', function(x, y){
 		//console.log('position', x, y);
 		
@@ -80,11 +74,4 @@ io.on('connection', function(socket){
 		pd.write([x, y].join(' ') + ';\n');
 	});
 });
-
-
-
-
-
-
-
 

@@ -110,7 +110,7 @@ Tests.describe('Station connection', function(it){
 			pd.write('hi Pd!;\n');
 		});
 
-		pd.on('print', function(buffer){
+		pd.on('stderr', function(buffer){
 			expect(buffer).toBeType('object');
 			buffer = buffer.toString();
 			if (buffer.trim() == 'ready: bang'){
@@ -183,7 +183,7 @@ Tests.describe('Station connection', function(it){
 
 		pd.on('error', function(error){});
 		pd.on('close', function(){});
-		pd.on('print', function(buffer){});
+		pd.on('stderr', function(buffer){});
 		pd.on('connection', function(){});
 
 		pd.on('data', function(data){
@@ -201,7 +201,7 @@ Tests.describe('Station connection', function(it){
 	});
 
 
-	it('should connect, but not internally spawn Pd', function(expect){
+	it('should allow to connect to a manually spawned Pd process', function(expect){
 		expect.perform(2);
 
 		var spawn = require('child_process').spawn;
@@ -231,7 +231,6 @@ Tests.describe('Station connection', function(it){
 		})
 		.on('destroy', function(){
 			pdprocess.kill();
-			pdprocess = null;
 		})
 		.create();
 

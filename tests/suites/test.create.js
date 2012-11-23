@@ -18,12 +18,11 @@ Tests.describe('Station create', function(it){
 
 		expect(pd).toBeAnInstanceOf(station);
 
-		// 'print' event available in '-nogui' mode
-		pd.on('print', function(buffer){
+		pd.on('stderr', function(buffer){
 			expect(buffer).toBeType('object');
 			expect(buffer.toString()).toBeTruthy();
 			expect(buffer.toString().trim()).toEqual('print: bang');
-			this.destroy();
+			pd.destroy();
 		});
 
 		pd.create();
@@ -40,7 +39,7 @@ Tests.describe('Station create', function(it){
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.loadbang.pd']
 		});
 
-		pd.on('print', function(buffer){
+		pd.on('stderr', function(buffer){
 			expect(buffer.toString().trim()).toEqual('print: bang');
 			pd.destroy();
 		});
@@ -63,8 +62,7 @@ Tests.describe('Station create', function(it){
 
 		expect(pd).toBeAnInstanceOf(station);
 
-		// 'print' event available in '-nogui' mode
-		pd.on('print', function(buffer){
+		pd.on('stderr', function(buffer){
 			expect(buffer).toBeType('object');
 			expect(buffer.toString()).toBeTruthy();
 			expect(buffer.toString().trim()).toEqual('print: bang');
@@ -93,7 +91,7 @@ Tests.describe('Station create', function(it){
 				'-open', dir + '/suites/test.receive.pd'
 			]
 		})
-		.on('print', function(buffer){
+		.on('stderr', function(buffer){
 			expect(buffer).toBeType('object');
 			expect(buffer).toEqual('print: hi Pd!\n');
 			expect(buffer.toString().slice(0, -1)).toEqual('print: hi Pd!');
@@ -127,7 +125,7 @@ Tests.describe('Station create', function(it){
 				'-send', 'node ' + data,
 				'-open', dir + '/suites/test.receive.pd']
 		})
-		.on('print', function(buffer){
+		.on('stderr', function(buffer){
 			received += buffer.toString();
 			if (!!received.match(/\n$/)){
 				expect(received).toEqual('print: ' + data + '\n');
@@ -156,7 +154,7 @@ Tests.describe('Station create', function(it){
 				'-open', dir + '/suites/test.receivers.pd'
 			]
 		})
-		.on('print', function(buffer){
+		.on('stderr', function(buffer){
 			var packet = buffer.toString().split('\n');
 			packet.forEach(function(message){
 

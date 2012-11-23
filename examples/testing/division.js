@@ -61,7 +61,7 @@ var pd = station({
 		'-noprefs', '-stderr', '-nogui', '-send', 'netsend connect localhost 8105',
 		'-open', dir + '/division.pd'
 	]
-}).on('print', function(buffer){
+}).on('stderr', function(buffer){
 	var data = buffer.toString(), result = data.match(/^result:\s(.+)/);
 	if (!!result){
 		if (result[1] == tests[i].expect) print('\u001B[32m', 'PASSED');
@@ -83,5 +83,7 @@ var pd = station({
 	} else {
 		print('\u001B[33m', data, '\u001B[0m');
 	}
-}).on('connect', run).create();
+})
+.on('connect', run)
+.create();
 

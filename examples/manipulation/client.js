@@ -6,12 +6,7 @@ var canvas = document.getElementById('osci'),
 context.fillStyle = '#000';
 context.fillRect(0, 0, canvas.width, canvas.height);
 
-
 var socket = io.connect();
-socket.on('connect', function(){
-	// console.log('connected');
-});
-
 
 var blockWidth = canvas.width / 128,
 	touching = false;
@@ -55,5 +50,4 @@ canvas.addEventListener('touchstart', function(e){
 canvas.addEventListener('touchmove', change, false);
 canvas.addEventListener('touchend', stop, false);
 canvas.addEventListener('touchcancel', stop, false); 
-
 

@@ -8,8 +8,6 @@ context.fillRect(0, 0, 1024, 480); // canvas.width canvas.height
 var socket = io.connect();
 
 socket.on('connect', function(){
-	// console.log('connected');
-
 	socket.on('data', function(data){
 		var i, l = data.length;
 		context.fillStyle = '#000';

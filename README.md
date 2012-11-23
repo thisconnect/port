@@ -1,7 +1,7 @@
 Station
 =======
 
-Node.js module to communicate with Pd (aka Pure Data).
+A Node.js module to communicate with Pure Data (aka Pd).
 
 
 Example
@@ -107,7 +107,7 @@ pd.on('connection', function(socket){ });
 
 #### Arguments:
 
-1. Socket (object) - Exposes the socket object connecting to [netsend]
+1. Socket (object) - Exposes the socket connection from [netsend]
 
 
 
@@ -121,7 +121,7 @@ pd.on('connect', function(socket){ });
 
 #### Arguments:
 
-1. Socket (object) - Exposes the socket object connecting to [netreceive]
+1. Socket (object) - Exposes the socket connection to [netreceive]
 
 
 
@@ -139,12 +139,12 @@ pd.on('data', function(data){ });
 
 
 
-### Event: print
+### Event: stderr
 
-Fires every message that is logged in the console by Pd or the [print] object. WARNING: event is subject to be renamed to stderr. 
+Fires on every message that is written to the console the [print] object or anything else. This event is only available with `-stderr` or `-nogui` flag.
 
 ```js
-pd.on('print', function(buffer){ });
+pd.on('stderr', function(buffer){ });
 ```
 
 #### Arguments:
@@ -162,13 +162,29 @@ pd.on('destroy', function(){ });
 ```
 
 
-
 Run tests
 ---------
 
-	node tests/runner.js
+To run the tests first install testigo `git submodule update --init --recursive` or download it from [github.com/keeto/testigo](https://github.com/keeto/testigo) to tests/testigo.
+
+	node tests/run.js
+
+
+Examples
+--------
+
+Some examples are only proof of concept and are not optimized for best performance.
+
+	node examples/testing/division.js
+
+	node examples/manipulation/server.js
+
 
 Requires
 --------
-  - [Pure Data](http://crca.ucsd.edu/~msp/software.html)
-  - [Node.js](http://nodejs.org/)
+  - Vanilla Pure Data from 
+  [crca.ucsd.edu/~msp/software.html](http://crca.ucsd.edu/~msp/software.html)
+  or Pd-extended from [pureadta.info/downloads](http://puredata.info/downloads)
+  - Node.js from [nodejs.org](http://nodejs.org/)
+
+

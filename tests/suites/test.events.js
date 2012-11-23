@@ -40,7 +40,7 @@ Tests.describe('Station Events', function(it){
 		});
 
 		// receives data from [print]
-		pd.on('print', function(buffer){
+		pd.on('stderr', function(buffer){
 			expect(this).toEqual(pd);
 			expect(this).toBeAnInstanceOf(station);
 		});
@@ -82,7 +82,7 @@ Tests.describe('Station Events', function(it){
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
 		});
 
-		pd.on('print', function(buffer){});
+		pd.on('stderr', function(buffer){});
 		pd.on('listening', function(){});
 		pd.on('connection', function(socket){});
 

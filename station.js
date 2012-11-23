@@ -20,13 +20,13 @@ Station.prototype = Object.create(events.prototype);
 Station.prototype.setOptions = function(options){
 	this.options = {
 		host: options.host || 'localhost',
-		read: options.read || null, // [netsend]
-		write: options.write || null, // [netreceive]
+		read: options.read || null, // [connect <port>( -> [netsend]
+		write: options.write || null, // [netreceive <port>]
 		pd: ('pd' in options) ? options.pd
 			: (('darwin' == process.platform)
 				? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
 				: 'pd'),
-		flags: options.flags || ['-noprefs', '-stderr', './station.pd'],
+		flags: options.flags || [], // ['-noprefs', '-stderr', './station.pd']
 		encoding: options.encoding || 'ascii' // 'utf8', 'base64', 'hex'
 	};
 };
@@ -47,7 +47,7 @@ function create(){
 	var child = this.child = spawn(this.options.pd, this.options.flags);
 	child.on('exit', this.emit.bind(this, 'exit'));
 	// child.stderr.setEncoding(this.options.encoding); // would transform to string
-	child.stderr.on('data', this.emit.bind(this, 'print'));
+	child.stderr.on('data', this.emit.bind(this, 'stderr'));
 	return this;
 }
 
