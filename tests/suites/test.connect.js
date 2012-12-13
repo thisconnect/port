@@ -1,18 +1,18 @@
 exports.setup = function(Tests){
 
 var path = require('path'),
-	station = require('../../station');
+	port = require('../../port');
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
 
-Tests.describe('Station connection', function(it){
+Tests.describe('Port connection', function(it){
 
 
 	it('should expose 2 sockets for [netsend] and [netreceive]', function(expect){
 		expect.perform(3);
 
-		station({
+		port({
 			read: 8005, // [netsend]
 			write: 8006, // [netreceive]
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.connect.pd']
@@ -25,7 +25,7 @@ Tests.describe('Station connection', function(it){
 			this.destroy();
 		})
 		.on('destroy', function(){
-			expect(this).toBeAnInstanceOf(station);
+			expect(this).toBeAnInstanceOf(port);
 		})
 		.create();
 
@@ -35,7 +35,7 @@ Tests.describe('Station connection', function(it){
 	it('should echo messages sent to Pd', function(expect){
 		expect.perform(5);
 
-		var pd = station({
+		var pd = port({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
 			encoding: 'ascii',
@@ -66,7 +66,7 @@ Tests.describe('Station connection', function(it){
 	it('should pass the raw buffer object if no encoding is specified', function(expect){
 		expect.perform(2);
 
-		var pd = station({
+		var pd = port({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
@@ -92,13 +92,13 @@ Tests.describe('Station connection', function(it){
 	it('should connect to two Pd instances in parallel', function(expect){
 		expect.perform(3);
 
-		var one = station({
+		var one = port({
 			read: 8005, // [netsend]
 			write: 8006, // [netreceive]
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.connect.pd']
 		});
 
-		var two = station({
+		var two = port({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
 			encoding: 'ascii',
@@ -129,7 +129,7 @@ Tests.describe('Station connection', function(it){
 	it('should establish a oneway sending connection', function(expect){
 		expect.perform(3);
 
-		var pd = station({
+		var pd = port({
 			write: 8046, // [netreceive]
 			flags: ['-noprefs', '-stderr', dir + '/suites/test.netreceive.pd']
 		});
@@ -158,7 +158,7 @@ Tests.describe('Station connection', function(it){
 	it('should establish a oneway receiving connection', function(expect){
 		expect.perform(4);
 
-		var pd = station({
+		var pd = port({
 			read: 8025, // [netsend]
 			encoding: 'ascii',
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.pd']
@@ -182,7 +182,7 @@ Tests.describe('Station connection', function(it){
 
 		var result = 0;
 
-		station({
+		port({
 			read: 8035, // [netsend]
 			encoding: 'ascii',
 			max: 2,
@@ -207,7 +207,7 @@ Tests.describe('Station connection', function(it){
 
 		var result = 0;
 
-		var pd = station({
+		var pd = port({
 			read: 8035, // [netsend]
 			//encoding: 'ascii',
 			max: 1,
@@ -233,7 +233,7 @@ Tests.describe('Station connection', function(it){
 
 		var i = 1;
 
-		var pd = station({
+		var pd = port({
 			read: 8025, // [netsend]
 			encoding: 'ascii',
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.pd']
@@ -266,7 +266,7 @@ Tests.describe('Station connection', function(it){
 
 		var pdprocess = null;
 
-		station({
+		port({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
 			encoding: 'ascii',

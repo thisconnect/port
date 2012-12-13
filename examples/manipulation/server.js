@@ -5,7 +5,7 @@ var path = require('path'),
 	http = require('http'),
 	fs = require('fs'),
 	socketio = require('socket.io'),
-	station = require('../../station');
+	port = require('../../port');
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
@@ -21,7 +21,7 @@ var server = http.createServer(function(req, res){
 		res.end([
 			'<!doctype html>',
 			'<meta charset="utf-8">',
-			'<title>Example with Station</title>',
+			'<title>Port</title>',
 			'<style>body { margin: 0; }</style>',
 			'<canvas id=osci width=640 height=480></canvas>',
 			'<script src="/socket.io/socket.io.js"></script>',
@@ -45,8 +45,8 @@ var server = http.createServer(function(req, res){
 }).listen(8118);
 
 
-// station setup
-var pd = station({
+// port setup
+var pd = port({
 	read: 8125, // [netsend]
 	write: 8126, // [netreceive]
 	flags: ['-noprefs', // '-stderr', '-nogui',

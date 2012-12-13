@@ -1,22 +1,22 @@
 exports.setup = function(Tests){
 
 var path = require('path'),
-	station = require('../../station');
+	port = require('../../port');
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
 
-Tests.describe('Station create', function(it){
+Tests.describe('Port create', function(it){
 
 
 	it('should create a Pd process with -nogui flag and receive data from [print]', function(expect){
 		expect.perform(4);
 
-		var pd = station({
+		var pd = port({
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.loadbang.pd']
 		});
 
-		expect(pd).toBeAnInstanceOf(station);
+		expect(pd).toBeAnInstanceOf(port);
 
 		pd.on('stderr', function(buffer){
 			expect(buffer).toBeType('object');
@@ -35,7 +35,7 @@ Tests.describe('Station create', function(it){
 
 		var i = 1;
 
-		var pd = station({
+		var pd = port({
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.loadbang.pd']
 		});
 
@@ -56,24 +56,24 @@ Tests.describe('Station create', function(it){
 	it('should create a Pd process with -stderr flag and receive data from [print]', function(expect){
 		expect.perform(8);
 
-		var pd = station({
+		var pd = port({
 			flags: ['-noprefs', '-stderr', dir + '/suites/test.loadbang.pd']
 		});
 
-		expect(pd).toBeAnInstanceOf(station);
+		expect(pd).toBeAnInstanceOf(port);
 
 		pd.on('stderr', function(buffer){
 			expect(buffer).toBeType('object');
 			expect(buffer.toString()).toBeTruthy();
 			expect(buffer.toString().trim()).toEqual('print: bang');
 			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
+			expect(this).toBeAnInstanceOf(port);
 			this.destroy();
 		});
 
 		pd.on('destroy', function(){
 			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
+			expect(this).toBeAnInstanceOf(port);
 		});
 
 		pd.create();
@@ -84,7 +84,7 @@ Tests.describe('Station create', function(it){
 	it('should send a message to Pd using the -send flag', function(expect){
 		expect.perform(3);
 
-		station({
+		port({
 			flags: [
 				'-noprefs', '-nogui',
 				'-send', 'node hi Pd!',
@@ -120,7 +120,7 @@ Tests.describe('Station create', function(it){
 
 		data = data.join(' ');
 
-		station({
+		port({
 			flags: ['-noprefs', '-nogui', '-stderr',
 				'-send', 'node ' + data,
 				'-open', dir + '/suites/test.receive.pd']
@@ -147,7 +147,7 @@ Tests.describe('Station create', function(it){
 				'out2': []
 			};
 
-		station({
+		port({
 			flags: [
 				'-noprefs', '-nogui', '-stderr',
 				'-send', 'in1 ' + in1.toString() + ';in2 ' + in2.toString(),

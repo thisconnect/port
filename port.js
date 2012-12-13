@@ -3,8 +3,8 @@ var net = require('net'),
 	events = require('events').EventEmitter;
 
 
-function Station(options){
-	if (!(this instanceof Station)) return new Station(options);
+function Port(options){
+	if (!(this instanceof Port)) return new Port(options);
 	this.setOptions(options);
 	this.bound = {
 		create: create.bind(this),
@@ -14,10 +14,10 @@ function Station(options){
 }
 
 
-Station.prototype = Object.create(events.prototype);
+Port.prototype = Object.create(events.prototype);
 
 
-Station.prototype.setOptions = function(options){
+Port.prototype.setOptions = function(options){
 	this.options = {
 		host: options.host || 'localhost',
 		read: options.read || null, // [connect <port>( -> [netsend]
@@ -28,7 +28,7 @@ Station.prototype.setOptions = function(options){
 			: (('darwin' == process.platform)
 				? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
 				: 'pd'),
-		flags: options.flags || [] // ['-noprefs', '-stderr', './station.pd']
+		flags: options.flags || [] // ['-noprefs', '-stderr', './port.pd']
 	};
 };
 
@@ -69,7 +69,7 @@ function connect(){
 	this.sender.connect(this.options.write, this.options.host);
 }
 
-Station.prototype.create = function(){
+Port.prototype.create = function(){
 	if (!!this.options.write) this.on('connection', this.bound.connect);
 	if (!this.options.read) return this.bound.create();
 	this.on('listening', this.bound.create);
@@ -77,7 +77,7 @@ Station.prototype.create = function(){
 	return this;
 };
 
-Station.prototype.destroy = function(){
+Port.prototype.destroy = function(){
 	process.removeListener('exit', this.destroy);
 	this.removeListener('listening', this.bound.create);
 	this.removeListener('connection', this.bound.connect);
@@ -98,16 +98,16 @@ Station.prototype.destroy = function(){
 	return this;
 };
 
-Station.prototype.write = function(data){
+Port.prototype.write = function(data){
 	this.sender.write(data);
 	return this;
 };
 
 /*
-Station.prototype.getPID = function(){
+Port.prototype.getPID = function(){
 	return this.child.pid;
 };
 */
 
 
-module.exports = Station;
+module.exports = Port;

@@ -4,7 +4,7 @@
 
 var path = require('path'),
 	print = require('util').print;
-	station = require('../../station');
+	port = require('../../port');
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
@@ -45,7 +45,7 @@ var tests = [{
 	}
 ];
 
-console.log('\nexpect to run ' + tests.length + ' tests. 6 passing, 1 failing and 3 to error\n');
+console.log('\nexpect to run ' + tests.length + ' tests. \n- 6 passing, \n- 1 failing \n- 3 to error\n');
 
 var i = -1;
 
@@ -54,7 +54,7 @@ function run(){
 	pd.write(tests[i].input.join(';\n') + ';\n');
 }
 
-var pd = station({
+var pd = port({
 	read: 8105, // [netsend]
 	write: 8106, // [netreceive]
 	flags: [

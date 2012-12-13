@@ -1,18 +1,18 @@
 exports.setup = function(Tests){
 
 var path = require('path'),
-	station = require('../../station');
+	port = require('../../port');
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
 
-Tests.describe('Station Events', function(it){
+Tests.describe('Port Events', function(it){
 
 
 	it('should test the scope of all event callbacks', function(expect){
 		expect.perform(14);
 
-		var pd = station({
+		var pd = port({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
 			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
@@ -21,19 +21,19 @@ Tests.describe('Station Events', function(it){
 		// listens for [netsend]
 		pd.on('listening', function(){
 			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
+			expect(this).toBeAnInstanceOf(port);
 		});
 
 		// [netsend] socket
 		pd.on('connection', function(socket){
 			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
+			expect(this).toBeAnInstanceOf(port);
 		});
 
 		// [netreceive] socket
 		pd.on('connect', function(socket){
 			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
+			expect(this).toBeAnInstanceOf(port);
 
 			// sends data to [netreceive]
 			this.write('send Hello Pd!;\n');
@@ -42,13 +42,13 @@ Tests.describe('Station Events', function(it){
 		// receives data from [print]
 		pd.on('stderr', function(buffer){
 			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
+			expect(this).toBeAnInstanceOf(port);
 		});
 
 		// receives data from [netsend]
 		pd.on('data', function(data){
 			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
+			expect(this).toBeAnInstanceOf(port);
 
 			// end pd
 			this.destroy()
@@ -57,13 +57,13 @@ Tests.describe('Station Events', function(it){
 		// fired after destroy completes
 		pd.on('destroy', function(){
 			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
+			expect(this).toBeAnInstanceOf(port);
 		});
 
 		// fires after pd process ends
 		pd.on('exit', function(code, signal){
 			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(station);
+			expect(this).toBeAnInstanceOf(port);
 		});
 
 		pd.create();
@@ -76,7 +76,7 @@ Tests.describe('Station Events', function(it){
 
 		var i = 1;
 
-		var pd = station({
+		var pd = port({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
 			encoding: 'ascii',

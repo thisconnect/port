@@ -5,7 +5,7 @@ var path = require('path'),
 	http = require('http'),
 	fs = require('fs'),
 	socketio = require('socket.io'),
-	station = require('../../station');
+	port = require('../../port');
 
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
@@ -19,7 +19,7 @@ var server = http.createServer(function(req, res){
 		res.end([
 			'<!doctype html>',
 			'<meta charset="utf-8">',
-			'<title>Oscilloscope Example with Station</title>',
+			'<title>Oscilloscope with Port</title>',
 			'<canvas id=osci width=1024 height=480></canvas>',
 			'<script src="/socket.io/socket.io.js"></script>',
 			'<script src="/client.js"></script>\n'
@@ -47,9 +47,9 @@ console.log('WARNING', 'this example is not optimized and probably requires a lo
 
 
 
-// create the station
+// create the port
 
-var pd = station({
+var pd = port({
 	read: 8115, // [netsend]
 	write: 8116, // [netreceive]
 	encoding: 'ascii',

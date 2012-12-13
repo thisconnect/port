@@ -1,5 +1,4 @@
-Station
-=======
+# Port
 
 A Node.js module to communicate with Pure Data (aka Pd).
 
@@ -8,9 +7,9 @@ Example
 -------
 
 ```js
-var Station = require('station');
+var port = require('port');
 
-Station({
+port({
 	read: 8004,
 	write: 8005,
 	flags: ['-noprefs', '-send', 'pd dsp 1, dsp 0', '-open', './mypatch.pd']
@@ -28,18 +27,18 @@ Station({
 API
 ---
 
-### Constructor: Station
+### Constructor: Port
 
 ```js
-var pd = Station(options);
+var pd = Port(options);
 ```
 
 #### Options:
 
   - `host` - the domain of the Pd process. Defaults to localhost.
-  - `read` - the port number for Pd's [netsend] to send data to the Station. 
+  - `read` - the port number for Pd's [netsend] to send data to the Port. 
   Defaults to null.
-  - `write` - the port number for Station to send data to Pd's [netreceive]. 
+  - `write` - the port number to send data to Pd's [netreceive]. 
   Defaults to null.
   - `encoding` - the default encoding of the read and write socket, 
   http://nodejs.org/api/stream.html#stream_stream_setencoding_encoding
@@ -59,7 +58,7 @@ Methods
 -------
 
 
-### Method: Station.create
+### Method: Port.create
 
 1. Spawns the Pd process.
 2. Listens for an incoming socket connection.
@@ -72,7 +71,7 @@ pd.create();
 ```
 
 
-### Method: Station.destroy
+### Method: Port.destroy
 
 Kills the Pd process and ends all open connections. 
 
@@ -81,7 +80,7 @@ pd.destroy();
 ```
 
 
-### Method: Station.write
+### Method: Port.write
 
 Sends a paket containing one or many messages to Pd's [netreceive].
 
@@ -100,14 +99,14 @@ pd.write('Hello Pd!;\n');
 Events
 ------
 
-Station is an event emitter see also http://nodejs.org/api/events.html
+Port is an event emitter see also http://nodejs.org/api/events.html
 
 
 
 ### Event: listening
 
-Fires if the read port is specified and after Station.create is called. 
-At this point Station is awaiting an incoming connection from Pd's [netsend].
+Fires if the read port is specified and after Port.create is called. 
+At this point Port is waiting for an incoming TCP connection from Pd's [netsend].
 
 ```js
 pd.on('listening', function(){ });
@@ -131,7 +130,7 @@ pd.on('connection', function(socket){ });
 
 ### Event: connect
 
-Fires when Station connects to Pd on the write port. 
+Fires when Port connects to Pd on the write port. 
 
 ```js
 pd.on('connect', function(socket){ });
