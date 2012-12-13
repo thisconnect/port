@@ -2,6 +2,16 @@
 	"name": "port"
     , "version": "0.6.1"
     , "author": "Enrique Erne (http://mild.ch/)"
+	, "description": "Connects and spawns Pd (Pure Data) over TCP sockets"
+	, "keywords": [
+		"puredata"
+		, "pd"
+		, "fudi"
+		, "tcp"
+		, "dsp"
+		, "signal"
+		, "audio"
+	]
     , "contributors": [
 		{"name": "Enrique Erne"}
 	]
