@@ -33,7 +33,7 @@ API
 var pd = Port(options);
 ```
 
-#### Options:
+##### Options:
 
   - `host` - the domain of the Pd process. Defaults to localhost.
   - `read` - the port number for Pd's [netsend] to send data to the Port. 
@@ -90,7 +90,7 @@ WARNING: write does not check if the write socket is ready and may error!
 pd.write('Hello Pd!;\n');
 ```
 
-#### Arguments:
+##### Arguments:
 
 1. Data (string) - the packet to send to the write socket.
 
@@ -122,7 +122,7 @@ Fires when Pd connects on the read port.
 pd.on('connection', function(socket){ });
 ```
 
-#### Arguments:
+##### Arguments:
 
 1. Socket (object) - Exposes the socket connection from [netsend]
 
@@ -136,7 +136,7 @@ Fires when Port connects to Pd on the write port.
 pd.on('connect', function(socket){ });
 ```
 
-#### Arguments:
+##### Arguments:
 
 1. Socket (object) - Exposes the socket connection to [netreceive].
 
@@ -150,7 +150,7 @@ Fires when Pd sends a message with [netsend].
 pd.on('data', function(data){ });
 ```
 
-#### Arguments:
+##### Arguments:
 
 1. Data - a buffer object or a string if encoding is not null.
 
@@ -165,7 +165,7 @@ or anything else. This event is only available with `-stderr` or `-nogui` flag.
 pd.on('stderr', function(buffer){ });
 ```
 
-#### Arguments:
+##### Arguments:
 
 1. Buffer - the stderr buffer object
 
