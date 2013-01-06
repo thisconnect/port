@@ -99,8 +99,7 @@ Port.prototype.destroy = function(){
 };
 
 Port.prototype.write = function(data){
-	if (data == null) return this;
-	this.sender.write(data);
+	if (data != null) this.sender.write(data);
 	return this;
 };
 
