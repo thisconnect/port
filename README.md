@@ -41,8 +41,10 @@ API
 ### Constructor: Port
 
 ```js
-var pd = Port(options);
+var pd = new Port(options);
 ```
+
+The `new` keyword is optional.
 
 ##### Options
 
