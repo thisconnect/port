@@ -1,6 +1,6 @@
 {
 	"name": "port"
-    , "version": "0.6.1"
+    , "version": "0.6.2"
     , "author": "Enrique Erne (http://mild.ch/)"
 	, "description": "Connects and spawns Pd (Pure Data) over TCP sockets"
 	, "keywords": [
@@ -12,6 +12,8 @@
 		, "signal"
 		, "audio"
 	]
+	, "repository": "git://github.com/thisconnect/port.git"
+	, "homepage": "https://github.com/thisconnect/port"
     , "contributors": [
 		{"name": "Enrique Erne"}
 	]
@@ -20,4 +22,7 @@
 		"type": "MIT"
         , "url": "https://raw.github.com/thisconnect/port/master/LICENSE"
 	}]
+	, "bugs": {
+		"url": "https://github.com/thisconnect/port/issues"
+	}
 }
