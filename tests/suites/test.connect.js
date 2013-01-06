@@ -295,6 +295,29 @@ Tests.describe('Port connection', function(it){
 
 	});
 
+
+	it('should dismiss invalid write data', function(expect){
+		expect.perform(2);
+
+		var pd = port({
+			read: 8015, // [netsend]
+			write: 8016, // [netreceive]
+			encoding: 'ascii',
+			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
+		});
+
+		// [netreceive] socket
+		pd.on('connect', function(socket){
+			// socket.write(null);
+			expect(this.write(null)).toBe(this);
+			expect(pd.write(null)).toBe(this);
+			pd.destroy();
+		});
+
+		pd.create();
+
+	});
+
 });
 
 };
