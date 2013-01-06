@@ -1,6 +1,7 @@
 # Port
 
-A Node.js module to communicate with Pure Data (aka Pd).
+A Node.js module to spawn and communicate with Pure Data (aka Pd).
+
 
 
 Example
@@ -24,6 +25,16 @@ port({
 ```
 
 
+
+Install
+-------
+
+```bash
+npm install port
+```
+
+
+
 API
 ---
 
@@ -33,7 +44,7 @@ API
 var pd = Port(options);
 ```
 
-##### Options:
+##### Options
 
   - `host` - the domain of the Pd process. Defaults to localhost.
   - `read` - the port number for Pd's [netsend] to send data to the Port. 
@@ -42,15 +53,14 @@ var pd = Port(options);
   Defaults to null.
   - `encoding` - the default encoding of the read and write socket, 
   http://nodejs.org/api/stream.html#stream_stream_setencoding_encoding
-  Defaults to null
+  Defaults to null.
   - `max` - allows to limit incoming connections. Defaults to 1.
   - `pd` - the command or location to spawn the Pd process. 
   Defaults to an absolute path to the Pd binary on OS X. Defaults to pd on Linux.
   - `flags` - the command line arguments for the Pd process. 
   Expects an array of arguments. Read more about Pd's configuration flags on 
   http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4 . 
-  Defaults to []
-
+  Defaults to [].
 
 
 
@@ -71,6 +81,7 @@ pd.create();
 ```
 
 
+
 ### Method: Port.destroy
 
 Kills the Pd process and ends all open connections. 
@@ -78,6 +89,7 @@ Kills the Pd process and ends all open connections.
 ```js
 pd.destroy();
 ```
+
 
 
 ### Method: Port.write
@@ -90,7 +102,7 @@ WARNING: write does not check if the write socket is ready and may error!
 pd.write('Hello Pd!;\n');
 ```
 
-##### Arguments:
+##### Arguments
 
 1. Data (string) - the packet to send to the write socket.
 
@@ -99,7 +111,8 @@ pd.write('Hello Pd!;\n');
 Events
 ------
 
-Port is an event emitter see also http://nodejs.org/api/events.html
+Port is an event emitter see also
+[nodejs.org/api/events.html](http://nodejs.org/api/events.html)
 
 
 
@@ -122,9 +135,9 @@ Fires when Pd connects on the read port.
 pd.on('connection', function(socket){ });
 ```
 
-##### Arguments:
+##### Arguments
 
-1. Socket (object) - Exposes the socket connection from [netsend]
+1. Socket (object) - Exposes the socket connection from [netsend].
 
 
 
@@ -136,7 +149,7 @@ Fires when Port connects to Pd on the write port.
 pd.on('connect', function(socket){ });
 ```
 
-##### Arguments:
+##### Arguments
 
 1. Socket (object) - Exposes the socket connection to [netreceive].
 
@@ -150,7 +163,7 @@ Fires when Pd sends a message with [netsend].
 pd.on('data', function(data){ });
 ```
 
-##### Arguments:
+##### Arguments
 
 1. Data - a buffer object or a string if encoding is not null.
 
@@ -165,9 +178,9 @@ or anything else. This event is only available with `-stderr` or `-nogui` flag.
 pd.on('stderr', function(buffer){ });
 ```
 
-##### Arguments:
+##### Arguments
 
-1. Buffer - the stderr buffer object
+1. Buffer - the stderr buffer object.
 
 
 
@@ -180,13 +193,22 @@ pd.on('destroy', function(){ });
 ```
 
 
-Run tests
----------
+Tests
+-----
 
-To run the tests first install testigo `git submodule update --init --recursive` 
-or download it from [github.com/keeto/testigo](https://github.com/keeto/testigo) to tests/testigo.
+Running tests requires the installation of 
+[Testigo](https://github.com/keeto/testigo).
 
-	node tests/run.js
+```bash
+git submodule update --init --recursive
+```
+
+To run the tests:
+
+```bash
+node tests/run.js
+```
+
 
 
 Examples
@@ -194,16 +216,16 @@ Examples
 
 Some examples are only proof of concept and are not optimized for best performance.
 
-	node examples/testing/division.js
+```bash
+node examples/testing/division.js
 
-	node examples/manipulation/server.js
-
+node examples/manipulation/server.js
+```
 
 Requires
 --------
+
   - Vanilla Pure Data from 
   [crca.ucsd.edu/~msp/software.html](http://crca.ucsd.edu/~msp/software.html)
-  or Pd-extended from [pureadta.info/downloads](http://puredata.info/downloads)
-  - Node.js from [nodejs.org](http://nodejs.org/)
-
-
+  or Pd-extended from [pureadta.info/downloads](http://puredata.info/downloads).
+  - Node.js from [nodejs.org](http://nodejs.org/).
