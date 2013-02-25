@@ -79,21 +79,27 @@ Port.prototype.create = function(){
 
 Port.prototype.destroy = function(){
 	process.removeListener('exit', this.destroy);
-	this.removeListener('listening', this.bound.create);
-	this.removeListener('connection', this.bound.connect);
+	this.removeAllListeners('listening');
+	this.removeAllListeners('connection');
 	if (!!this.sender){
 		this.sender.destroy();
-		this.sender.removeAllListeners();
+		this.sender.removeAllListeners('connect');
+		this.sender.removeAllListeners('error');
 		delete this.sender;
 	}
 	if (!!this.receiver){
 		if (!!this.receiver.connections) this.receiver.close();
-		this.receiver.removeAllListeners();
+		this.receiver.removeAllListeners('listening');
+		this.receiver.removeAllListeners('connection');
+		this.receiver.removeAllListeners('error');
 		delete this.receiver;
 	}
 	if (!!this.socket) this.socket.destroy();
 
-	if (!!this.child) this.child.kill();
+	if (!!this.child){
+		this.child.stderr.removeAllListeners('data');
+		this.child.kill();
+	}
 	this.emit('destroy');
 	return this;
 };
