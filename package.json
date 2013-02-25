@@ -1,6 +1,6 @@
 {
 	"name": "port"
-	, "version": "0.6.3"
+	, "version": "0.6.4"
 	, "author": "Enrique Erne (http://mild.ch/)"
 	, "description": "Connects and spawns Pd (Pure Data) over TCP sockets"
 	, "keywords": [
