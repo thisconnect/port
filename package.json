@@ -1,7 +1,7 @@
 {
 	"name": "port"
-    , "version": "0.6.2"
-    , "author": "Enrique Erne (http://mild.ch/)"
+	, "version": "0.6.3"
+	, "author": "Enrique Erne (http://mild.ch/)"
 	, "description": "Connects and spawns Pd (Pure Data) over TCP sockets"
 	, "keywords": [
 		"puredata"
@@ -14,13 +14,13 @@
 	]
 	, "repository": "git://github.com/thisconnect/port.git"
 	, "homepage": "https://github.com/thisconnect/port"
-    , "contributors": [
+	, "contributors": [
 		{"name": "Enrique Erne"}
 	]
-    , "main": "port"
-    , "licenses": [{
+	, "main": "port"
+	, "licenses": [{
 		"type": "MIT"
-        , "url": "https://raw.github.com/thisconnect/port/master/LICENSE"
+		, "url": "https://raw.github.com/thisconnect/port/master/LICENSE"
 	}]
 	, "bugs": {
 		"url": "https://github.com/thisconnect/port/issues"
