@@ -48,20 +48,22 @@ The `new` keyword is optional.
 
 ##### Options
 
-  - `host` - the domain of the Pd process. Defaults to localhost.
-  - `read` - the port number for Pd's [netsend] to send data to the Port. 
+  - `host` - (string) The domain of the Pd process. Defaults to localhost.
+  - `read` - (number|null) The port to listen to Pd's [netsend]. 
   Defaults to null.
-  - `write` - the port number to send data to Pd's [netreceive]. 
+  - `write` - (number|null) The port to connect to Pd's [netreceive]. 
   Defaults to null.
-  - `encoding` - the default encoding of the read and write socket, 
-  http://nodejs.org/api/stream.html#stream_stream_setencoding_encoding
+  - `encoding` - (ascii|utf8|base64|hex|null)
+  the default encoding of the read and write socket, 
+  [nodejs.org/api/stream.html#stream_stream_setencoding_encoding](http://nodejs.org/api/stream.html#stream_stream_setencoding_encoding)
   Defaults to null.
-  - `max` - allows to limit incoming connections. Defaults to 1.
-  - `pd` - the command or location to spawn the Pd process. 
-  Defaults to an absolute path to the Pd binary on OS X. Defaults to pd on Linux.
-  - `flags` - the command line arguments for the Pd process. 
+  - `max` - (number) allows to limit incoming connections. Defaults to 1.
+  - `pd` - (string) the command or location to spawn the Pd process. 
+  Defaults to an absolute path to the Pd binary on OS X.
+  Defaults to 'pd' on Linux.
+  - `flags` - (array) the command line arguments for the Pd process. 
   Expects an array of arguments. Read more about Pd's configuration flags on 
-  http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4 . 
+  [crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4](http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4) . 
   Defaults to [].
 
 
@@ -167,7 +169,7 @@ pd.on('data', function(data){ });
 
 ##### Arguments
 
-1. Data - a buffer object or a string if encoding is not null.
+1. Data - a buffer object or a string (if encoding is not null).
 
 
 
@@ -229,5 +231,5 @@ Requires
 
   - Vanilla Pure Data from 
   [crca.ucsd.edu/~msp/software.html](http://crca.ucsd.edu/~msp/software.html)
-  or Pd-extended from [pureadta.info/downloads](http://puredata.info/downloads).
+  or Pd-extended from [puredata.info/downloads](http://puredata.info/downloads).
   - Node.js from [nodejs.org](http://nodejs.org/).
