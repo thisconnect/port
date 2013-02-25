@@ -41,6 +41,8 @@ API
 ### Constructor: Port
 
 ```js
+var Port = require('port');
+
 var pd = new Port(options);
 ```
 
@@ -49,11 +51,11 @@ The `new` keyword is optional.
 ##### Options
 
   - `host` - (string) The domain of the Pd process. Defaults to localhost.
-  - `read` - (number|null) The port to listen to Pd's [netsend]. 
+  - `read` - (number | null) The port to listen to Pd's [netsend]. 
   Defaults to null.
-  - `write` - (number|null) The port to connect to Pd's [netreceive]. 
+  - `write` - (number | null) The port to connect to Pd's [netreceive]. 
   Defaults to null.
-  - `encoding` - (ascii|utf8|base64|hex|null)
+  - `encoding` - (ascii | utf8 | base64 | hex | null)
   the default encoding of the read and write socket, 
   [nodejs.org/api/stream.html#stream_stream_setencoding_encoding](http://nodejs.org/api/stream.html#stream_stream_setencoding_encoding)
   Defaults to null.
