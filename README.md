@@ -56,14 +56,14 @@ The `new` keyword is optional.
   - `write` - (number | null) The port to connect to Pd's [netreceive]. 
   Defaults to null.
   - `encoding` - (ascii | utf8 | base64 | hex | null)
-  the default encoding of the read and write socket, 
+  The encoding of the read and write socket, 
   [nodejs.org/api/stream.html#stream_stream_setencoding_encoding](http://nodejs.org/api/stream.html#stream_stream_setencoding_encoding)
   Defaults to null.
-  - `max` - (number) allows to limit incoming connections. Defaults to 1.
-  - `pd` - (string) the command or location to spawn the Pd process. 
+  - `max` - (number) Limits amount of incoming connections. Defaults to 1.
+  - `pd` - (string) The command or location to spawn the Pd process. 
   Defaults to an absolute path to the Pd binary on OS X.
   Defaults to 'pd' on Linux.
-  - `flags` - (array) the command line arguments for the Pd process. 
+  - `flags` - (array) The command line arguments for the Pd process. 
   Expects an array of arguments. Read more about Pd's configuration flags on 
   [crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4](http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4) . 
   Defaults to [].
