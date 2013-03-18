@@ -88,7 +88,7 @@ Port.prototype.destroy = function(){
 		delete this.sender;
 	}
 	if (!!this.receiver){
-		if (!!this.receiver.connections) this.receiver.close();
+		this.receiver.close();
 		this.receiver.removeAllListeners('listening');
 		this.receiver.removeAllListeners('connection');
 		this.receiver.removeAllListeners('error');
