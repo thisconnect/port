@@ -1,28 +1,25 @@
-exports.setup = function(Tests){
+var expect = require('expect.js');
 
-var path = require('path'),
-	port = require('../../port');
-
-var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
+var port = require('../');
 
 
-Tests.describe('Port create', function(it){
+describe('Port create', function(){
 
 
-	it('should create a Pd process with -nogui flag and receive data from [print]', function(expect){
-		expect.perform(4);
+	it('should create a Pd process with -nogui flag and receive data from [print]', function(done){
 
 		var pd = port({
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.loadbang.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-loadbang.pd']
 		});
 
-		expect(pd).toBeAnInstanceOf(port);
+		expect(pd).to.be.a(port);
 
 		pd.on('stderr', function(buffer){
-			expect(buffer).toBeType('object');
-			expect(buffer.toString()).toBeTruthy();
-			expect(buffer.toString().trim()).toEqual('print: bang');
+			expect(buffer).to.be.an('object');
+			expect(buffer.toString()).to.be.ok();
+			expect(buffer.toString().trim()).to.be('print: bang');
 			pd.destroy();
+			done();
 		});
 
 		pd.create();
@@ -30,22 +27,22 @@ Tests.describe('Port create', function(it){
 	});
 
 
-	it('should create and destroy 20 times in a row', function(expect){
-		expect.perform(20);
+	it('should create and destroy 20 times in a row', function(done){
 
 		var i = 1;
 
 		var pd = port({
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.loadbang.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-loadbang.pd']
 		});
 
 		pd.on('stderr', function(buffer){
-			expect(buffer.toString().trim()).toEqual('print: bang');
+			expect(buffer.toString().trim()).to.be('print: bang');
 			pd.destroy();
 		});
 
 		pd.on('destroy', function(){
 			if (i++ < 20) pd.create();
+			else done();
 		});
 
 		pd.create();
@@ -53,27 +50,27 @@ Tests.describe('Port create', function(it){
 	});
 
 
-	it('should create a Pd process with -stderr flag and receive data from [print]', function(expect){
-		expect.perform(8);
+	it('should create a Pd process with -stderr flag and receive data from [print]', function(done){
 
 		var pd = port({
-			flags: ['-noprefs', '-stderr', dir + '/suites/test.loadbang.pd']
+			flags: ['-noprefs', '-stderr', __dirname + '/test-loadbang.pd']
 		});
 
-		expect(pd).toBeAnInstanceOf(port);
+		expect(pd).to.be.a(port);
 
 		pd.on('stderr', function(buffer){
-			expect(buffer).toBeType('object');
-			expect(buffer.toString()).toBeTruthy();
-			expect(buffer.toString().trim()).toEqual('print: bang');
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(port);
+			expect(buffer).to.be.an('object');
+			expect(buffer.toString()).to.be.ok();
+			expect(buffer.toString().trim()).to.be('print: bang');
+			expect(this).to.be(pd);
+			expect(this).to.be.a(port);
 			this.destroy();
 		});
 
 		pd.on('destroy', function(){
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(port);
+			expect(this).to.be(pd);
+			expect(this).to.be.a(port);
+			done();
 		});
 
 		pd.create();
@@ -81,8 +78,7 @@ Tests.describe('Port create', function(it){
 	});
 
 
-	it('should send a message to Pd using the -send flag', function(expect){
-		expect.perform(2);
+	it('should send a message to Pd using the -send flag', function(done){
 
 		var received = '';
 
@@ -90,15 +86,16 @@ Tests.describe('Port create', function(it){
 			flags: [
 				'-noprefs', '-nogui',
 				'-send', 'node hi Pd!',
-				'-open', dir + '/suites/test.receive.pd'
+				'-open', __dirname + '/test-receive.pd'
 			]
 		})
 		.on('stderr', function(buffer){
 			received += buffer.toString();
 			if (!!received.match(/\n$/)){
-				expect(received).toEqual('print: hi Pd!\n');
-				expect(received.toString().slice(0, -1)).toEqual('print: hi Pd!');
+				expect(received).to.be('print: hi Pd!\n');
+				expect(received.toString().slice(0, -1)).to.be('print: hi Pd!');
 				this.destroy();
+				done();
 			}
 		})
 		.create();
@@ -106,8 +103,7 @@ Tests.describe('Port create', function(it){
 	});
 
 
-	it('should send a long message to Pd using the -send flag', function(expect){
-		expect.perform(1);
+	it('should send a long message to Pd using the -send flag', function(done){
 
 		var received = '',
 			data = [
@@ -127,13 +123,14 @@ Tests.describe('Port create', function(it){
 		port({
 			flags: ['-noprefs', '-nogui', '-stderr',
 				'-send', 'node ' + data,
-				'-open', dir + '/suites/test.receive.pd']
+				'-open', __dirname + '/test-receive.pd']
 		})
 		.on('stderr', function(buffer){
 			received += buffer.toString();
 			if (!!received.match(/\n$/)){
-				expect(received).toEqual('print: ' + data + '\n');
+				expect(received).to.be('print: ' + data + '\n');
 				this.destroy();
+				done();
 			}
 		})
 		.create();
@@ -141,8 +138,7 @@ Tests.describe('Port create', function(it){
 	});
 
 
-	it('should send many messages to Pd using the -send flag', function(expect){
-		expect.perform(2);
+	it('should send many messages to Pd using the -send flag', function(done){
 
 		var in1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 			in2 = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
@@ -155,7 +151,7 @@ Tests.describe('Port create', function(it){
 			flags: [
 				'-noprefs', '-nogui', '-stderr',
 				'-send', 'in1 ' + in1.toString() + ';in2 ' + in2.toString(),
-				'-open', dir + '/suites/test.receivers.pd'
+				'-open', __dirname + '/test-receivers.pd'
 			]
 		})
 		.on('stderr', function(buffer){
@@ -172,9 +168,10 @@ Tests.describe('Port create', function(it){
 			if (in1.length == result.out1.length
 				&& in2.length == result.out2.length
 			){
-				expect(result.out1).toBeSimilar(in1);
-				expect(result.out2).toBeSimilar(in2);
+				expect(result.out1).to.eql(in1);
+				expect(result.out2).to.eql(in2);
 				this.destroy();
+				done();
 			}
 		})
 		.create();
@@ -182,5 +179,3 @@ Tests.describe('Port create', function(it){
 	});
 
 });
-
-};

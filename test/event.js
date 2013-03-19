@@ -1,39 +1,35 @@
-exports.setup = function(Tests){
+var expect = require('expect.js');
 
-var path = require('path'),
-	port = require('../../port');
-
-var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
+var port = require('../');
 
 
-Tests.describe('Port Events', function(it){
+describe('Port Events', function(){
 
 
-	it('should test the scope of all event callbacks', function(expect){
-		expect.perform(14);
+	it('should test the scope of all event callbacks', function(done){
 
 		var pd = port({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
 		});
 
 		// listens for [netsend]
 		pd.on('listening', function(){
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(port);
+			expect(this).to.be(pd);
+			expect(this).to.be.a(port);
 		});
 
 		// [netsend] socket
 		pd.on('connection', function(socket){
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(port);
+			expect(this).to.be(pd);
+			expect(this).to.be.a(port);
 		});
 
 		// [netreceive] socket
 		pd.on('connect', function(socket){
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(port);
+			expect(this).to.be(pd);
+			expect(this).to.be.a(port);
 
 			// sends data to [netreceive]
 			this.write('send Hello Pd!;\n');
@@ -41,14 +37,14 @@ Tests.describe('Port Events', function(it){
 
 		// receives data from [print]
 		pd.on('stderr', function(buffer){
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(port);
+			expect(this).to.be(pd);
+			expect(this).to.be.a(port);
 		});
 
 		// receives data from [netsend]
 		pd.on('data', function(data){
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(port);
+			expect(this).to.be(pd);
+			expect(this).to.be.a(port);
 
 			// end pd
 			this.destroy()
@@ -56,14 +52,15 @@ Tests.describe('Port Events', function(it){
 
 		// fired after destroy completes
 		pd.on('destroy', function(){
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(port);
+			expect(this).to.be(pd);
+			expect(this).to.be.a(port);
 		});
 
 		// fires after pd process ends
 		pd.on('exit', function(code, signal){
-			expect(this).toEqual(pd);
-			expect(this).toBeAnInstanceOf(port);
+			expect(this).to.be(pd);
+			expect(this).to.be.a(port);
+			done();
 		});
 
 		pd.create();
@@ -71,8 +68,7 @@ Tests.describe('Port Events', function(it){
 	});
 
 
-	it('should create, write and destroy 20 times', function(expect){
-		expect.perform(40);
+	it('should create, write and destroy 20 times', function(done){
 
 		var i = 1;
 
@@ -80,7 +76,7 @@ Tests.describe('Port Events', function(it){
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
 			encoding: 'ascii',
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
 		});
 
 		pd.on('stderr', function(buffer){});
@@ -92,16 +88,17 @@ Tests.describe('Port Events', function(it){
 		});
 
 		pd.on('data', function(data){
-			expect(data).toBe('Hello Pd!;\n');
+			expect(data).to.be('Hello Pd!;\n');
 			pd.destroy()
 		});
 
 		pd.on('destroy', function(){
 			if (i++ < 20) pd.create();
+			else done();
 		});
 
 		pd.on('exit', function(code, signal){
-			expect(arguments.length).toBe(2);
+			expect(arguments.length).to.be(2);
 		});
 
 		pd.create();
@@ -110,6 +107,3 @@ Tests.describe('Port Events', function(it){
 
 
 });
-
-};
-

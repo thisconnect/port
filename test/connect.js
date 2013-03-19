@@ -1,61 +1,57 @@
-exports.setup = function(Tests){
+var expect = require('expect.js');
 
-var path = require('path'),
-	port = require('../../port');
+var port = require('../');
 
-var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
-
-
-Tests.describe('Port connection', function(it){
+describe('Port connection', function(){
 
 
-	it('should expose 2 sockets for [netsend] and [netreceive]', function(expect){
-		expect.perform(3);
+	it('should expose 2 sockets for [netsend] and [netreceive]', function(done){
 
 		port({
 			read: 8005, // [netsend]
 			write: 8006, // [netreceive]
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.connect.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-connection.pd']
 		})
 		.on('connection', function(socket){
-			expect(socket).toBeType('object');
+			expect(socket).to.be.an('object');
 		})
 		.on('connect', function(socket){
-			expect(socket).toBeType('object');
+			expect(socket).to.be.an('object');
 			this.destroy();
 		})
 		.on('destroy', function(){
-			expect(this).toBeAnInstanceOf(port);
+			expect(this).to.be.a(port);
+			done();
 		})
 		.create();
 
 	});
 
 
-	it('should echo messages sent to Pd', function(expect){
-		expect.perform(5);
+	it('should echo messages sent to Pd', function(done){
 
 		var pd = port({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
 			encoding: 'ascii',
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
 		});
 
 		// [netreceive] socket
 		pd.on('connect', function(socket){
-			expect(socket.write).toBeType('function');
-			expect(this.write).toBeType('function');
-			expect(pd.write).toBeType('function');
+			expect(socket.write).to.be.a('function');
+			expect(this.write).to.be.a('function');
+			expect(pd.write).to.be.a('function');
 			// sends data to [netreceive]
 			socket.write('send Hello Pd!;\n');
 		});
 
 		// receives data from [netsend]
 		pd.on('data', function(data){
-			expect(data).toBeType('string');
-			expect(data).toEqual('Hello Pd!;\n');
+			expect(data).to.be.a('string');
+			expect(data).to.be('Hello Pd!;\n');
 			pd.destroy();
+			done();
 		});
 
 		pd.create();
@@ -63,13 +59,12 @@ Tests.describe('Port connection', function(it){
 	});
 
 
-	it('should pass the raw buffer object if no encoding is specified', function(expect){
-		expect.perform(2);
+	it('should pass the raw buffer object if no encoding is specified', function(done){
 
 		var pd = port({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
 		});
 
 		pd.on('connect', function(socket){
@@ -79,9 +74,10 @@ Tests.describe('Port connection', function(it){
 
 		// receives data from [netsend]
 		pd.on('data', function(data){
-			expect(data).toBeType('object');
-			expect(data).toHaveProperty('length');
+			expect(data).to.be.an('object');
+			expect(data).to.have.property('length');
 			pd.destroy();
+			done();
 		});
 
 		pd.create();
@@ -89,27 +85,27 @@ Tests.describe('Port connection', function(it){
 	});
 
 
-	it('should connect to two Pd instances in parallel', function(expect){
-		expect.perform(3);
+	it('should connect to two Pd instances in parallel', function(done){
 
 		var one = port({
 			read: 8005, // [netsend]
 			write: 8006, // [netreceive]
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.connect.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-connection.pd']
 		});
 
 		var two = port({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
 			encoding: 'ascii',
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
 		});
 
 		two.on('data', function(data){
-			expect(data).toBeType('string');
-			expect(data).toEqual('Hello Pd!;\n');
+			expect(data).to.be.a('string');
+			expect(data).to.be('Hello Pd!;\n');
 			one.destroy();
-			two.destroy()
+			two.destroy();
+			done();
 		});
 
 		two.on('connect', function(socket){
@@ -117,7 +113,7 @@ Tests.describe('Port connection', function(it){
 		});
 
 		one.on('connect', function(socket){
-			expect(socket).toBeType('object');
+			expect(socket).to.be.an('object');
 			two.create();
 		});
 
@@ -126,12 +122,11 @@ Tests.describe('Port connection', function(it){
 	});
 
 
-	it('should establish a oneway sending connection', function(expect){
-		expect.perform(3);
+	it('should establish a oneway sending connection', function(done){
 
 		var pd = port({
 			write: 8046, // [netreceive]
-			flags: ['-noprefs', '-stderr', dir + '/suites/test.netreceive.pd']
+			flags: ['-noprefs', '-stderr', __dirname + '/test-netreceive.pd']
 		});
 
 		pd.on('connect', function(){
@@ -139,14 +134,16 @@ Tests.describe('Port connection', function(it){
 		});
 
 		pd.on('stderr', function(buffer){
-			expect(buffer).toBeType('object');
+			expect(buffer).to.be.an('object');
 			buffer = buffer.toString();
 			if (buffer.trim() == 'ready: bang'){
 				// if there is no read socket manually fire the connection event
 				pd.emit('connection');
 			} else {
-				expect(buffer).toEqual('print: hi Pd!\n');
+				console.l
+				expect(buffer).to.be('print: hi Pd!\n');
 				pd.destroy();
+				done();
 			}
 		});
 
@@ -155,21 +152,21 @@ Tests.describe('Port connection', function(it){
 	});
 
 
-	it('should establish a oneway receiving connection', function(expect){
-		expect.perform(4);
+	it('should establish a oneway receiving connection', function(done){
 
 		var pd = port({
 			read: 8025, // [netsend]
 			encoding: 'ascii',
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-netsend.pd']
 		});
 
 		pd.on('data', function(data){
-			expect(data).toBeType('string');
-			expect(data.substr(-2)).toEqual(';\n');
-			expect(parseInt(data.slice(0, -2))).toBeType('number');
-			expect(data).toEqual('100;\n');
+			expect(data).to.be.a('string');
+			expect(data.substr(-2)).to.be(';\n');
+			expect(data).to.be('100;\n');
+			expect(parseInt(data.slice(0, -2))).to.be.a('number');
 			pd.destroy();
+			done();
 		});
 
 		pd.create();
@@ -177,8 +174,7 @@ Tests.describe('Port connection', function(it){
 	});
 
 
-	it('should receive data from 2 [netsend] objects', function(expect){
-		expect.perform(3);
+	it('should receive data from 2 [netsend] objects', function(done){
 
 		var result = 0;
 
@@ -186,24 +182,24 @@ Tests.describe('Port connection', function(it){
 			read: 8035, // [netsend]
 			encoding: 'ascii',
 			max: 2,
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsends.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-netsends.pd']
 		})
 		.on('data', function(data){
 			data = parseInt(data.slice(0, -2));
-			expect(data).toBeType('number');
+			expect(data).to.be.a('number');
 			result += data;
 			if (result == 3) this.destroy();
 		})
 		.on('destroy', function(){
-			expect(result).toEqual(3);
+			expect(result).to.be(3);
+			done();
 		})
 		.create();
 
 	});
 
 
-	it('should limit the incoming connections to 1', function(expect){
-		expect.perform(3);
+	it('should limit the incoming connections to 1', function(done){
 
 		var result = 0;
 
@@ -211,32 +207,32 @@ Tests.describe('Port connection', function(it){
 			read: 8035, // [netsend]
 			//encoding: 'ascii',
 			max: 1,
-			flags: ['-noprefs', '-stderr', dir + '/suites/test.netsends.pd']
+			flags: ['-noprefs', '-stderr', __dirname + '/test-netsends.pd']
 		})
 		.on('data', function(buffer){
-			var data = buffer.slice(0, 1);
-			expect(data.toString()).toBeType('string');
-			expect(data).toEqual(1);
+			var data = parseInt(buffer.toString().slice(0, 1));
+			expect(data).to.be.a('number');
+			expect(data).to.be(1);
 			result += data;
 			setTimeout(function(){ pd.destroy(); }, 500);
 		})
 		.on('destroy', function(){
-			expect(result).toEqual(1);
+			expect(result).to.be(1);
+			done();
 		})
 		.create();
 
 	});
 
 
-	it('should create and destroy a one way connection 16 times in a row', function(expect){
-		expect.perform(32);
+	it('should create and destroy a one way connection 16 times in a row', function(done){
 
 		var i = 1;
 
 		var pd = port({
 			read: 8025, // [netsend]
 			encoding: 'ascii',
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.netsend.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-netsend.pd']
 		});
 
 		pd.on('error', function(error){});
@@ -245,13 +241,14 @@ Tests.describe('Port connection', function(it){
 		pd.on('connection', function(){});
 
 		pd.on('data', function(data){
-			expect(data).toBeType('string');
-			expect(data).toEqual('100;\n');
+			expect(data).to.be.a('string');
+			expect(data).to.be('100;\n');
 			pd.destroy();
 		});
 
 		pd.on('destroy', function(){
 			if (i++ < 16) pd.create();
+			else done();
 		});
 
 		pd.create();
@@ -259,8 +256,7 @@ Tests.describe('Port connection', function(it){
 	});
 
 
-	it('should allow to connect to a manually spawned Pd process', function(expect){
-		expect.perform(2);
+	it('should allow to connect to a manually spawned Pd process', function(done){
 
 		var spawn = require('child_process').spawn;
 
@@ -278,40 +274,40 @@ Tests.describe('Port connection', function(it){
 				: 'pd';
 
 			// spawn pd manually
-			pdprocess = spawn(location, ['-noprefs', '-nogui', dir + '/suites/test.net.pd']);
+			pdprocess = spawn(location, ['-noprefs', '-nogui', __dirname + '/test-net.pd']);
 		})
 		.on('connect', function(socket){
 			this.write('send Gday Pd!;\n');
 		})
 		.on('data', function(data){
-			expect(data).toBeType('string');
-			expect(data).toEqual('Gday Pd!;\n');
+			expect(data).to.be.a('string');
+			expect(data).to.be('Gday Pd!;\n');
 			this.destroy();
 		})
 		.on('destroy', function(){
 			pdprocess.kill();
+			done();
 		})
 		.create();
 
 	});
 
 
-	it('should dismiss invalid write data', function(expect){
-		expect.perform(2);
+	it('should dismiss invalid write data', function(done){
 
 		var pd = port({
 			read: 8015, // [netsend]
 			write: 8016, // [netreceive]
 			encoding: 'ascii',
-			flags: ['-noprefs', '-nogui', dir + '/suites/test.net.pd']
+			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
 		});
 
 		// [netreceive] socket
 		pd.on('connect', function(socket){
-			// socket.write(null);
-			expect(this.write(null)).toBe(this);
-			expect(pd.write(null)).toBe(this);
+			expect(this.write(null)).to.be(this);
+			expect(pd.write(null)).to.be(this);
 			pd.destroy();
+			done();
 		});
 
 		pd.create();
@@ -319,6 +315,3 @@ Tests.describe('Port connection', function(it){
 	});
 
 });
-
-};
-
