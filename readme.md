@@ -199,20 +199,12 @@ pd.on('destroy', function(){ });
 ```
 
 
+
 Tests
 -----
 
-Running tests requires the installation of 
-[Testigo](https://github.com/keeto/testigo).
-
 ```bash
-git submodule update --init --recursive
-```
-
-To run the tests:
-
-```bash
-node tests/run.js
+make test
 ```
 
 
@@ -227,6 +219,8 @@ node examples/testing/division.js
 
 node examples/manipulation/server.js
 ```
+
+
 
 Requires
 --------
