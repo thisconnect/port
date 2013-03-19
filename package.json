@@ -1,6 +1,6 @@
 {
 	"name": "port"
-	, "version": "0.6.4"
+	, "version": "0.6.5"
 	, "author": "Enrique Erne (http://mild.ch/)"
 	, "description": "Connects and spawns Pd (Pure Data) over TCP sockets"
 	, "keywords": [
@@ -17,11 +17,11 @@
 	, "contributors": [
 		{"name": "Enrique Erne"}
 	]
+	, "main": "port"
 	, "devDependencies": {
 		"mocha": ">= 1.8.2"
 		, "expect.js": "0.2.0"
 	}
-	, "main": "port"
 	, "licenses": [{
 		"type": "MIT"
 		, "url": "https://raw.github.com/thisconnect/port/master/LICENSE"
