@@ -140,7 +140,6 @@ describe('Port connection', function(){
 				// if there is no read socket manually fire the connection event
 				pd.emit('connection');
 			} else {
-				console.l
 				expect(buffer).to.be('print: hi Pd!\n');
 				pd.destroy();
 				done();
