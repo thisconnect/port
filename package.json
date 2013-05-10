@@ -19,12 +19,12 @@
 	]
 	, "main": "port"
 	, "devDependencies": {
-		"mocha": ">= 1.8.2"
+		"mocha": ">= 1.9.0"
 		, "expect.js": "0.2.0"
 	}
 	, "licenses": [{
 		"type": "MIT"
-		, "url": "https://raw.github.com/thisconnect/port/master/LICENSE"
+		, "url": "https://raw.github.com/thisconnect/port/master/license"
 	}]
 	, "bugs": {
 		"url": "https://github.com/thisconnect/port/issues"
