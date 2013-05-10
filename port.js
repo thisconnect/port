@@ -1,6 +1,6 @@
 var net = require('net'),
 	spawn = require('child_process').spawn,
-	events = require('events').EventEmitter;
+	emitter = require('events').EventEmitter;
 
 
 function Port(options){
@@ -14,7 +14,7 @@ function Port(options){
 }
 
 
-Port.prototype = Object.create(events.prototype);
+Port.prototype = Object.create(emitter.prototype);
 
 
 Port.prototype.setOptions = function(options){
