@@ -27,6 +27,53 @@ describe('Port create', function(){
 	});
 
 
+	it('should repeat the same test but with -path flag', function(done){
+
+		var pd = port({
+			flags: ['-noprefs', '-nogui', '-path', __dirname, 'test-loadbang.pd']
+		});
+
+		expect(pd).to.be.a(port);
+
+		pd.on('stderr', function(buffer){
+			expect(buffer).to.be.an('object');
+			expect(buffer.toString()).to.be.ok();
+			expect(buffer.toString().trim()).to.be('print: bang');
+			pd.destroy();
+			done();
+		});
+
+		pd.create();
+
+	});
+
+
+	it('should accept an object for flags', function(done){
+
+		var pd = port({
+			flags: {
+				'-noprefs': true,
+				'-nogui': true,
+				'-path': __dirname,
+				'-open': 'test-loadbang.pd'
+			}
+		});
+
+		expect(pd).to.be.a(port);
+
+		pd.on('stderr', function(buffer){
+			expect(buffer).to.be.an('object');
+			expect(buffer.toString()).to.be.ok();
+			expect(buffer.toString().trim()).to.be('print: bang');
+			pd.destroy();
+			done();
+		});
+
+		pd.create();
+
+	});
+
+
 	it('should create and destroy 20 times in a row', function(done){
 
 		var i = 1;

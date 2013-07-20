@@ -63,7 +63,7 @@ The `new` keyword is optional.
   - `pd` - (string) The command or location to spawn the Pd process. 
   Defaults to an absolute path to the Pd binary on OS X.
   Defaults to 'pd' on Linux.
-  - `flags` - (array) The command line arguments for the Pd process. 
+  - `flags` - (array|object) The command line arguments for the Pd process. 
   Expects an array of arguments. Read more about Pd's configuration flags on 
   [crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4](http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4) . 
   Defaults to [].

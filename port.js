@@ -42,10 +42,26 @@ function listen(){
 	receiver.on('error', this.emit.bind(this, 'error'));
 }
 
+function parseFlags(flags){
+	var array = [];
+	if (Array.isArray(flags)) return flags;
+	for (var f in flags){
+		if (/path|open/.test(f) || !flags[f]) continue;
+		array.push(f);
+		if (typeof flags[f] != 'boolean') array.push(o[f]);
+	}
+	if (!Array.isArray(flags['-path'])) array.push('-path', flags['-path']);
+	else for (var i = 0, l = flags['-path'].length; i < l; ++i){
+		array.push('-path', flags['-path'][i]);
+	}
+	array.push('-open', flags['-open']);
+	return array;
+}
+
 // start pd process
 function create(){
 	if (!this.options.pd) return this;
-	var child = this.child = spawn(this.options.pd, this.options.flags);
+	var child = this.child = spawn(this.options.pd, parseFlags(this.options.flags));
 	if (!!this.options.encoding) child.stderr.setEncoding(this.options.encoding);
 	child.on('exit', this.emit.bind(this, 'exit'));
 	child.stderr.on('data', this.emit.bind(this, 'stderr'));
