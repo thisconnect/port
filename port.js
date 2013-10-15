@@ -26,7 +26,7 @@ Port.prototype.setOptions = function(options){
 		max: ('max' in options) ? options.max : 1, // max connections
 		pd: ('pd' in options) ? options.pd
 			: (('darwin' == process.platform)
-				? '/Applications/Pd-0.43-2.app/Contents/Resources/bin/pd'
+				? '/Applications/Pd-0.45-2-64bit.app/Contents/Resources/bin/pd'
 				: 'pd'),
 		flags: options.flags || [] // ['-noprefs', '-stderr', './port.pd']
 	};
