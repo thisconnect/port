@@ -65,6 +65,7 @@ function create(){
 	if (!!this.options.encoding) child.stderr.setEncoding(this.options.encoding);
 	child.on('exit', this.emit.bind(this, 'exit'));
 	child.stderr.on('data', this.emit.bind(this, 'stderr'));
+	child.stderr.on('readable', this.emit.bind(this, 'readable'));
 	return this;
 }
 
