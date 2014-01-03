@@ -124,7 +124,7 @@ Port is an event emitter see also
 
 ### Event: listening
 
-Fires if the read port is specified and after Port.create is called. 
+Fires if the `read` port is specified and after Port.create is called.
 At this point Port is waiting for an incoming TCP connection from Pd's [netsend].
 
 ```js
@@ -135,7 +135,7 @@ pd.on('listening', function(){ });
 
 ### Event: connection
 
-Fires when Pd connects on the read port. 
+Fires when Pd connects and the `read` port is specified.
 
 ```js
 pd.on('connection', function(socket){ });
