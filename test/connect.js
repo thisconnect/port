@@ -215,7 +215,7 @@ describe('Port connection', function(){
 			read: 8035, // [netsend]
 			//encoding: 'ascii',
 			max: 1,
-			flags: ['-noprefs', '-stderr', __dirname + '/test-netsends.pd']
+			flags: ['-noprefs', '-nogui', '-stderr', __dirname + '/test-netsends.pd']
 		})
 		.on('data', function(buffer){
 			var data = parseInt(buffer.toString().slice(0, 1));

@@ -100,7 +100,7 @@ describe('Port create', function(){
 	it('should create a Pd process with -stderr flag and receive data from [print]', function(done){
 
 		var pd = port({
-			flags: ['-noprefs', '-stderr', __dirname + '/test-loadbang.pd']
+			flags: ['-noprefs', '-nogui', '-stderr', __dirname + '/test-loadbang.pd']
 		});
 
 		expect(pd).to.be.a(port);
