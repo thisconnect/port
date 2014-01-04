@@ -19,7 +19,7 @@
 	]
 	, "main": "port"
 	, "devDependencies": {
-		"mocha": ">= 1.12.0"
+		"mocha": ">= 1.16.2"
 		, "expect.js": "0.2.0"
 	}
 	, "licenses": [{
