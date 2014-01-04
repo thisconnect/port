@@ -76,6 +76,7 @@ describe('Port connection', function(){
 		pd.on('data', function(data){
 			expect(data).to.be.an('object');
 			expect(data).to.have.property('length');
+			expect(data.toString()).to.be('Hello Pd!;\n');
 			pd.destroy();
 			done();
 		});
@@ -124,20 +125,14 @@ describe('Port connection', function(){
 
 	});
 
-/*
+
 	it('should establish a oneway sending connection', function(done){
 		
 		var result = '';
 
 		var pd = port({
 			write: 8046, // [netreceive]
-			flags: ['-noprefs', '-stderr', __dirname + '/test-netreceive.pd']
-		});
-
-		pd.on('readable', function(){
-			// if there is no read socket manually connect
-				pd.bound.connect();
-			
+			flags: ['-noprefs', '-stderr', '-nogui', __dirname + '/test-netreceive.pd']
 		});
 
 		pd.on('connect', function(){
@@ -145,11 +140,12 @@ describe('Port connection', function(){
 		});
 
 		pd.on('stderr', function(buffer){
-			expect(buffer).to.be.an('object');
 			buffer = buffer.toString();
+			if (buffer == 'ready: bang\n') return pd.connect();
+
 			result += buffer;
-			expect('ready: bang\nprint: hi Pd!\n'.indexOf(buffer)).to.be.above(-1);
-			if (result == 'ready: bang\nprint: hi Pd!\n'){
+			expect('print: hi Pd!\n'.indexOf(buffer)).to.be.above(-1);
+			if (result == 'print: hi Pd!\n'){
 				pd.destroy();
 				done();
 			}
@@ -158,7 +154,7 @@ describe('Port connection', function(){
 		pd.create();
 
 	});
-*/
+
 
 	it('should establish a oneway receiving connection', function(done){
 
@@ -209,23 +205,40 @@ describe('Port connection', function(){
 
 	it('should limit the incoming connections to 1', function(done){
 
-		var result = 0;
+		var result = 'create, ';
 
 		var pd = port({
 			read: 8035, // [netsend]
 			//encoding: 'ascii',
 			max: 1,
-			flags: ['-noprefs', '-nogui', '-stderr', __dirname + '/test-netsends.pd']
+			flags: ['-noprefs', '-stderr', '-nogui', __dirname + '/test-netsends.pd']
 		})
-		.on('data', function(buffer){
-			var data = parseInt(buffer.toString().slice(0, 1));
-			expect(data).to.be.a('number');
-			expect(data).to.be(1);
-			result += data;
-			setTimeout(function(){ pd.destroy(); }, 500);
+		.on('listening', function(){
+			result += 'listen, ';
+		})
+		.on('stderr', function(buffer){
+			result += 'stderr, ';
+			//console.log(buffer.toString());
+		})
+		.on('connection', function(socket){
+			result += 'connection, ';
+			setTimeout(this.destroy.bind(this), 10);
+		})
+		.on('data', function(data){
+			data = data.toString();
+			result += 'data: ' + data + ', ';
+			expect(data).to.be.a('string');
+			expect(data).to.be('1;\n');
 		})
 		.on('destroy', function(){
-			expect(result).to.be(1);
+			result += 'destroy, done!';
+		})
+		.on('exit', function(){
+			expect(result.match(/create/g)).to.have.length(1);
+			expect(result.match(/listen/g)).to.have.length(1);
+			expect(result.match(/stderr/g)).to.have.length(2);
+			expect(result.match(/connection/g)).to.have.length(1);
+			expect(result.match(/data/g)).to.have.length(1);
 			done();
 		})
 		.create();
@@ -233,24 +246,22 @@ describe('Port connection', function(){
 	});
 
 
-	it('should create and destroy a one way connection 16 times in a row', function(done){
+	it('should create and destroy the same port instance 16 times in a row', function(done){
 
 		var i = 1;
 
 		var pd = port({
 			read: 8025, // [netsend]
-			encoding: 'ascii',
 			flags: ['-noprefs', '-nogui', __dirname + '/test-netsend.pd']
 		});
 
-		pd.on('error', function(error){});
-		pd.on('close', function(){});
-		pd.on('stderr', function(buffer){});
-		pd.on('connection', function(){});
+		// pd.on('error', function(error){});
+		// pd.on('close', function(){});
+		// pd.on('stderr', function(buffer){});
+		// pd.on('connection', function(){});
 
 		pd.on('data', function(data){
-			expect(data).to.be.a('string');
-			expect(data).to.be('100;\n');
+			expect(data.toString()).to.be('100;\n');
 			pd.destroy();
 		});
 
