@@ -6,10 +6,6 @@ var net = require('net'),
 function Port(options){
 	if (!(this instanceof Port)) return new Port(options);
 	this.setOptions(options);
-	this.bound = {
-		create: create.bind(this),
-		connect: connect.bind(this)
-	};
 	process.on('exit', this.destroy);
 }
 
@@ -59,15 +55,14 @@ function parseFlags(flags){
 }
 
 // start pd process
-function create(){
+Port.prototype.spawn = function(){
 	if (!this.options.pd) return this;
 	var child = this.child = spawn(this.options.pd, parseFlags(this.options.flags));
 	if (!!this.options.encoding) child.stderr.setEncoding(this.options.encoding);
 	child.on('exit', this.emit.bind(this, 'exit'));
 	child.stderr.on('data', this.emit.bind(this, 'stderr'));
-	child.stderr.on('readable', this.emit.bind(this, 'readable'));
 	return this;
-}
+};
 
 // on [netsend] connection
 function connection(socket){
@@ -78,18 +73,18 @@ function connection(socket){
 }
 
 // connect to [netreceive]
-function connect(){
+Port.prototype.connect = function(){
 	var sender = this.sender = new net.Socket();
 	if (!!this.options.encoding) sender.setEncoding(this.options.encoding);
 	sender.on('connect', this.emit.bind(this, 'connect', sender));
 	sender.on('error', this.emit.bind(this, 'error'));
 	this.sender.connect(this.options.write, this.options.host);
-}
+};
 
 Port.prototype.create = function(){
-	if (!!this.options.write) this.on('connection', this.bound.connect);
-	if (!this.options.read) return this.bound.create();
-	this.on('listening', this.bound.create);
+	if (!!this.options.write) this.on('connection', this.connect);
+	if (!this.options.read) return this.spawn();
+	this.on('listening', this.spawn);
 	listen.call(this);
 	return this;
 };
