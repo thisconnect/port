@@ -45,7 +45,7 @@ var tests = [{
 	}
 ];
 
-console.log('\nexpect to run ' + tests.length + ' tests. \n- 6 passing, \n- 1 failing \n- 3 to error\n');
+console.log('\ntesting the [/] object: 6 should pass, 1 should fail, 3 should error\n');
 
 var i = -1;
 
