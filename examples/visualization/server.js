@@ -46,35 +46,6 @@ console.log('Server running at http://localhost:8118/');
 console.log('WARNING', 'this example is not optimized and probably requires a lot CPU power');
 
 
-
-// create the port
-
-var pd = port({
-	read: 8115, // [netsend]
-	write: 8116, // [netreceive]
-	encoding: 'ascii',
-	flags: ['-noprefs', '-stderr', '-nogui',
-	'-open', dir + '/audioin.pd']
-})
-.on('connect', function(){
-	this.write('run 1;\n');
-})
-.on('data', function(data){
-	var i, l;
-	data = data.slice(0, -2).split(' ');
-	l = data.length;
-	for (i = 0; i < l; i += 1) {
-		data[i] = +data[i];
-	}
-
-	if (!!client) client.emit('data', data);
-})
-.on('stderr', function(buffer){
-	// console.log('print', buffer.toString());
-});
-
-
-
 // create a socket.io instance to push data to the client
 
 var client;
@@ -87,15 +58,32 @@ var io = socketio.listen(server, {
 });
 
 io.on('connection', function(socket){
-	//console.log('socket.io client connection');
 
-	client = socket;
+	// create the port
 
-	pd.create();
+	var pd = port({
+		read: 8115, // [netsend]
+		write: 8116, // [netreceive]
+		encoding: 'ascii',
+		flags: ['-noprefs', '-nogui', dir + '/audioin.pd']
+	})
+	.on('connect', function(){
+		this.write('run 1;\n');
+	})
+	.on('data', function(data){
+		var i, l;
+		data = data.slice(0, -2).split(' ');
+		l = data.length;
+		for (i = 0; i < l; i += 1){
+			data[i] = +data[i];
+		}
+		if (!!socket) socket.emit('data', data);
+	})
+	.create();
 
 	socket.on('disconnect', function(){
 		pd.destroy();
-		client = null;
 	});
+
 });
 
