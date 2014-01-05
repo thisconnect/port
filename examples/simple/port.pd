@@ -1,8 +1,8 @@
-#N canvas 19 29 543 298 10;
+#N canvas 537 36 543 298 10;
 #X obj 35 165 netsend;
 #X obj 35 35 loadbang;
-#X floatatom 35 205 5 0 0 0 - - -;
-#X floatatom 435 205 5 0 0 0 - - -;
+#X floatatom 35 205 5 0 0 0 - - -, f 5;
+#X floatatom 435 205 5 0 0 0 - - -, f 5;
 #X msg 35 75 connect localhost 8005;
 #X obj 295 165 netreceive 8006 0;
 #X obj 295 205 print;

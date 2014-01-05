@@ -13,15 +13,15 @@ var port = require('port');
 port({
 	read: 8004,
 	write: 8005,
-	flags: ['-noprefs', '-send', 'pd dsp 1, dsp 0', '-open', './mypatch.pd']
+	flags: ['-noprefs', '-send', 'pd dsp 1, dsp 0', './examples/simple/port.pd']
 })
-.create()
 .on('connect', function(){
 	this.write('Hello Pd!;\n');
 })
 .on('data', function(data){
 	console.log(data);
-});
+})
+.create();
 ```
 
 
