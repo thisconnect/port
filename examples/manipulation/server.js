@@ -9,8 +9,16 @@ var path = require('path'),
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
-var last = require('os').networkInterfaces().en1.length;
-console.log('\nbrowse to http://' + require('os').networkInterfaces().en1[last - 1].address + ':8118');
+var interface = require('os').networkInterfaces();
+
+Object.keys(interface).forEach(function(network){
+	var external = interface[network].filter(function(i){
+		return (!i.internal && i.family == 'IPv4');
+	});
+	if (!!external[0]) interface = external[0].address;
+});
+
+console.log('\nbrowse to http://' + interface + ':8118');
 
 
 
@@ -50,7 +58,7 @@ var pd = port({
 	read: 8125, // [netsend]
 	write: 8126, // [netreceive]
 	flags: ['-noprefs', // '-stderr', '-nogui',
-	'-open', dir + '/wavetable.pd']
+	dir + '/wavetable.pd']
 })
 .on('stderr', function(buffer){
 	console.log(buffer.toString());
