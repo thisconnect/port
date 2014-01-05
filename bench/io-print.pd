@@ -1,0 +1,22 @@
+#N canvas 474 474 570 260 10;
+#X obj 317 31 loadbang;
+#X obj 217 71 netsend;
+#X floatatom 217 111 5 0 0 0 - - -, f 5;
+#X floatatom 117 71 5 0 0 0 - - -, f 5;
+#X obj 217 31 r netsend;
+#X obj 27 71 t b b;
+#X obj 317 71 del 0;
+#X obj 27 31 netreceive 8206;
+#X msg 317 111 \; pd dsp 1 \, dsp 0 \; netsend connect localhost 8205
+;
+#X obj 27 111 realtime;
+#X obj 27 151 print;
+#X connect 0 0 6 0;
+#X connect 1 0 2 0;
+#X connect 4 0 1 0;
+#X connect 5 0 9 0;
+#X connect 5 1 9 1;
+#X connect 6 0 8 0;
+#X connect 7 0 5 0;
+#X connect 7 1 3 0;
+#X connect 9 0 10 0;

@@ -7,13 +7,14 @@ port({
 	read: 8205, // [netsend]
 	write: 8206, // [netreceive]
 	encoding: 'ascii',
-	flags: ['-noprefs', '-stderr', '-nogui', '-open', dir + '/io.pd']
+	flags: ['-noprefs', '-nogui', dir + '/io-netsend.pd']
 })
 .on('connect', function(){
 	this.write('bang;\n');
 })
+// receive data from [netsend]
 .on('data', function(data){
-	console.log('data', data);
+	console.log(data);
 	this.write('bang;\n');
 })
 .create();
