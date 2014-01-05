@@ -1,6 +1,6 @@
 var net = require('net'),
 	spawn = require('child_process').spawn,
-	emitter = require('events').EventEmitter;
+	event = require('events').EventEmitter;
 
 
 function Port(options){
@@ -10,7 +10,7 @@ function Port(options){
 }
 
 
-Port.prototype = Object.create(emitter.prototype);
+Port.prototype = Object.create(event.prototype);
 
 
 Port.prototype.setOptions = function(options){
@@ -27,16 +27,6 @@ Port.prototype.setOptions = function(options){
 		flags: options.flags || [] // ['-noprefs', '-stderr', './port.pd']
 	};
 };
-
-// listen for [netsend]
-function listen(){
-	var receiver = this.receiver = net.createServer();
-	if (!!this.options.max) receiver.maxConnections = this.options.max;
-	receiver.listen(this.options.read, this.options.host);
-	receiver.on('listening', this.emit.bind(this, 'listening'));
-	receiver.on('connection', connection.bind(this));
-	receiver.on('error', this.emit.bind(this, 'error'));
-}
 
 function parseFlags(flags){
 	var array = [];
@@ -72,6 +62,16 @@ function connection(socket){
 	this.emit('connection', socket);
 }
 
+// listen for [netsend]
+Port.prototype.listen = function(){
+	var receiver = this.receiver = net.createServer();
+	if (!!this.options.max) receiver.maxConnections = this.options.max;
+	receiver.listen(this.options.read, this.options.host);
+	receiver.on('listening', this.emit.bind(this, 'listening'));
+	receiver.on('connection', connection.bind(this));
+	receiver.on('error', this.emit.bind(this, 'error'));
+};
+
 // connect to [netreceive]
 Port.prototype.connect = function(){
 	var sender = this.sender = new net.Socket();
@@ -81,14 +81,22 @@ Port.prototype.connect = function(){
 	this.sender.connect(this.options.write, this.options.host);
 };
 
+// send data to [netreceive]
+Port.prototype.write = function(data){
+	if (data != null) this.sender.write(data);
+	return this;
+};
+
+// start Port
 Port.prototype.create = function(){
 	if (!!this.options.write) this.on('connection', this.connect);
 	if (!this.options.read) return this.spawn();
 	this.on('listening', this.spawn);
-	listen.call(this);
+	this.listen();
 	return this;
 };
 
+// stop Port
 Port.prototype.destroy = function(){
 	process.removeListener('exit', this.destroy);
 	this.removeAllListeners('listening');
@@ -115,17 +123,6 @@ Port.prototype.destroy = function(){
 	this.emit('destroy');
 	return this;
 };
-
-Port.prototype.write = function(data){
-	if (data != null) this.sender.write(data);
-	return this;
-};
-
-/*
-Port.prototype.getPID = function(){
-	return this.child.pid;
-};
-*/
 
 
 module.exports = Port;
