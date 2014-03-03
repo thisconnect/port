@@ -19,8 +19,8 @@
 	]
 	, "main": "port"
 	, "devDependencies": {
-		"mocha": ">= 1.16.2"
-		, "expect.js": "0.2.0"
+		"mocha": "1.17.1"
+		, "expect.js": "0.3.1"
 	}
 	, "licenses": [{
 		"type": "MIT"
