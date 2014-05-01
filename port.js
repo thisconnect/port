@@ -34,7 +34,7 @@ Port.prototype.parseFlags = function(flags){
 	for (var f in flags){
 		if (/path|open/.test(f) || !flags[f]) continue;
 		array.push(/^-/.test(f) ? f : '-' + f);
-		if (typeof flags[f] != 'boolean') array.push(o[f]);
+		if (typeof flags[f] != 'boolean') array.push(flags[f]);
 	}
 	var path = flags['-path'] || flags['path'];
 	if (!Array.isArray(path)) array.push('-path', path);

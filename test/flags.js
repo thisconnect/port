@@ -27,6 +27,7 @@ describe('Port Flags', function(){
 
 		expect(
 			port.prototype.parseFlags({
+				'-r': 44100,
 				'-noprefs': true,
 				'-nogui': true,
 				'-path': __dirname,
@@ -34,6 +35,7 @@ describe('Port Flags', function(){
 			})
 		).to.eql(
 			port.prototype.parseFlags({
+				'r': 44100,
 				'noprefs': true,
 				'nogui': true,
 				'path': __dirname,
