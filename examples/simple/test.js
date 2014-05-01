@@ -3,7 +3,7 @@ var port = require('port');
 port({
 	read: 8005,
 	write: 8006,
-	encode: 'ascii',
+	encoding: 'ascii',
 	flags: ['-noprefs', '-send', 'pd dsp 1, dsp 0', './port.pd']
 })
 .on('connect', function(){
