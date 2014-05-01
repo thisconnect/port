@@ -28,26 +28,27 @@ Port.prototype.setOptions = function(options){
 	};
 };
 
-function parseFlags(flags){
+Port.prototype.parseFlags = function(flags){
 	var array = [];
 	if (Array.isArray(flags)) return flags;
 	for (var f in flags){
 		if (/path|open/.test(f) || !flags[f]) continue;
-		array.push(f);
+		array.push(/^-/.test(f) ? f : '-' + f);
 		if (typeof flags[f] != 'boolean') array.push(o[f]);
 	}
-	if (!Array.isArray(flags['-path'])) array.push('-path', flags['-path']);
-	else for (var i = 0, l = flags['-path'].length; i < l; ++i){
-		array.push('-path', flags['-path'][i]);
+	var path = flags['-path'] || flags['path'];
+	if (!Array.isArray(path)) array.push('-path', path);
+	else for (var i = 0, l = path.length; i < l; ++i){
+		array.push('-path', path[i]);
 	}
-	array.push('-open', flags['-open']);
+	array.push('-open', flags['-open'] || flags['open']);
 	return array;
 }
 
 // start pd process
 Port.prototype.spawn = function(){
 	if (!this.options.pd) return this;
-	var child = this.child = spawn(this.options.pd, parseFlags(this.options.flags));
+	var child = this.child = spawn(this.options.pd, this.parseFlags(this.options.flags));
 	if (!!this.options.encoding) child.stderr.setEncoding(this.options.encoding);
 	child.on('exit', this.emit.bind(this, 'exit'));
 	child.stderr.on('data', this.emit.bind(this, 'stderr'));
