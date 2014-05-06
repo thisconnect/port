@@ -6,7 +6,7 @@ var port = require('../');
 describe('Port Flags', function(){
 
 
-	it('should accept arrays and objects for flags ', function(done){
+	it('should accept array and object for flags ', function(done){
 
 		expect(
 			port.prototype.parseFlags(['-noprefs', '-nogui', '-path', __dirname, '-open', 'test-loadbang.pd'])
