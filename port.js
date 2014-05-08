@@ -6,7 +6,6 @@ var net = require('net'),
 function Port(options){
 	if (!(this instanceof Port)) return new Port(options);
 	this.setOptions(options);
-	process.on('exit', this.destroy);
 }
 
 
@@ -90,6 +89,7 @@ Port.prototype.write = function(data){
 
 // start Port
 Port.prototype.create = function(){
+	process.on('exit', this.destroy);
 	if (!!this.options.write) this.on('connection', this.connect);
 	if (!this.options.read) return this.spawn();
 	this.on('listening', this.spawn);
