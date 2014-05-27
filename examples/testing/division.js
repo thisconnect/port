@@ -55,12 +55,15 @@ function run(){
 }
 
 var pd = port({
-	read: 8105, // [netsend]
-	write: 8106, // [netreceive]
-	flags: [
-		'-noprefs', '-stderr', '-nogui', '-send', 'netsend connect localhost 8105',
-		'-open', dir + '/division.pd'
-	]
+	'read': 8105, // [netsend]
+	'write': 8106, // [netreceive]
+	'flags': {
+		'noprefs': true,
+		'stderr': true,
+		'nogui': true,
+		'send': 'netsend connect localhost 8105',
+		'open': dir + '/division.pd'
+	}
 }).on('stderr', function(buffer){
 	var data = buffer.toString(), result = data.match(/^result:\s(.+)/);
 	if (!!result){

@@ -6,7 +6,7 @@ var port = require('../');
 describe('Port Flags', function(){
 
 
-	it('should accept array and object for flags ', function(done){
+	it('should accept array (deprecated) and object for flags ', function(done){
 
 		expect(
 			port.prototype.parseFlags(['-noprefs', '-nogui', '-path', __dirname, '-open', 'test-loadbang.pd'])
@@ -26,6 +26,7 @@ describe('Port Flags', function(){
 	it('should automatically prefix object flags with dash', function(done){
 
 		expect(
+			//  deprecated syntax
 			port.prototype.parseFlags({
 				'-r': 44100,
 				'-noprefs': true,

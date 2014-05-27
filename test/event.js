@@ -9,9 +9,13 @@ describe('Port Events', function(){
 	it('should test the scope of all event callbacks', function(done){
 
 		var pd = port({
-			read: 8015, // [netsend]
-			write: 8016, // [netreceive]
-			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
+			'read': 8015, // [netsend]
+			'write': 8016, // [netreceive]
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-net.pd'
+			}
 		});
 
 		// listens for [netsend]
@@ -73,10 +77,14 @@ describe('Port Events', function(){
 		var i = 1;
 
 		var pd = port({
-			read: 8015, // [netsend]
-			write: 8016, // [netreceive]
-			encoding: 'ascii',
-			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
+			'read': 8015, // [netsend]
+			'write': 8016, // [netreceive]
+			'encoding': 'ascii',
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-net.pd'
+			}
 		});
 
 		pd.on('stderr', function(buffer){});

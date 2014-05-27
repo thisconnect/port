@@ -1,13 +1,15 @@
-var port = require('../port'),
-	path = require('path');
-
-var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
+var port = require('../port');
 
 port({
-	read: 8205, // [netsend]
-	write: 8206, // [netreceive]
-	encoding: 'ascii',
-	flags: ['-noprefs', '-nogui', dir + '/io-netsend.pd']
+	'read': 8205, // [netsend]
+	'write': 8206, // [netreceive]
+	'encoding': 'ascii',
+	'basepath': __dirname,
+	'flags': {
+		'noprefs': true,
+		'nogui': true,
+		'open': 'io-netsend.pd'
+	}
 })
 .on('connect', function(){
 	this.write('bang;\n');

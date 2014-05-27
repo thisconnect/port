@@ -8,9 +8,13 @@ describe('Port connection', function(){
 	it('should expose 2 sockets for [netsend] and [netreceive]', function(done){
 
 		port({
-			read: 8005, // [netsend]
-			write: 8006, // [netreceive]
-			flags: ['-noprefs', '-nogui', __dirname + '/test-connection.pd']
+			'read': 8005, // [netsend]
+			'write': 8006, // [netreceive]
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-connection.pd'
+			}
 		})
 		.on('connection', function(socket){
 			expect(socket).to.be.an('object');
@@ -31,10 +35,14 @@ describe('Port connection', function(){
 	it('should echo messages sent to Pd', function(done){
 
 		var pd = port({
-			read: 8015, // [netsend]
-			write: 8016, // [netreceive]
-			encoding: 'ascii',
-			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
+			'read': 8015, // [netsend]
+			'write': 8016, // [netreceive]
+			'encoding': 'ascii',
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-net.pd'
+			}
 		});
 
 		// [netreceive] socket
@@ -62,9 +70,13 @@ describe('Port connection', function(){
 	it('should pass the raw buffer object if no encoding is specified', function(done){
 
 		var pd = port({
-			read: 8015, // [netsend]
-			write: 8016, // [netreceive]
-			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
+			'read': 8015, // [netsend]
+			'write': 8016, // [netreceive]
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-net.pd'
+			}
 		});
 
 		pd.on('connect', function(socket){
@@ -89,16 +101,24 @@ describe('Port connection', function(){
 	it('should connect to two Pd instances in parallel', function(done){
 
 		var one = port({
-			read: 8005, // [netsend]
-			write: 8006, // [netreceive]
-			flags: ['-noprefs', '-nogui', __dirname + '/test-connection.pd']
+			'read': 8005, // [netsend]
+			'write': 8006, // [netreceive]
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-connection.pd'
+			}
 		});
 
 		var two = port({
-			read: 8015, // [netsend]
-			write: 8016, // [netreceive]
-			encoding: 'ascii',
-			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
+			'read': 8015, // [netsend]
+			'write': 8016, // [netreceive]
+			'encoding': 'ascii',
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-net.pd'
+			}
 		});
 
 		two.on('data', function(data){
@@ -131,8 +151,13 @@ describe('Port connection', function(){
 		var result = '';
 
 		var pd = port({
-			write: 8046, // [netreceive]
-			flags: ['-noprefs', '-stderr', '-nogui', __dirname + '/test-netreceive.pd']
+			'write': 8046, // [netreceive]
+			'flags': {
+				'noprefs': true,
+				'stderr': true,
+				'nogui': true,
+				'open': __dirname + '/test-netreceive.pd'
+			}
 		});
 
 		pd.on('connect', function(){
@@ -159,9 +184,13 @@ describe('Port connection', function(){
 	it('should establish a oneway receiving connection', function(done){
 
 		var pd = port({
-			read: 8025, // [netsend]
-			encoding: 'ascii',
-			flags: ['-noprefs', '-nogui', __dirname + '/test-netsend.pd']
+			'read': 8025, // [netsend]
+			'encoding': 'ascii',
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-netsend.pd'
+			}
 		});
 
 		pd.on('data', function(data){
@@ -183,10 +212,14 @@ describe('Port connection', function(){
 		var result = 0;
 
 		port({
-			read: 8035, // [netsend]
-			encoding: 'ascii',
-			max: 2,
-			flags: ['-noprefs', '-nogui', __dirname + '/test-netsends.pd']
+			'read': 8035, // [netsend]
+			'encoding': 'ascii',
+			'max': 2,
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-netsends.pd'
+			}
 		})
 		.on('data', function(data){
 			data = parseInt(data.slice(0, -2));
@@ -208,10 +241,15 @@ describe('Port connection', function(){
 		var result = 'create, ';
 
 		var pd = port({
-			read: 8035, // [netsend]
+			'read': 8035, // [netsend]
 			//encoding: 'ascii',
-			max: 1,
-			flags: ['-noprefs', '-stderr', '-nogui', __dirname + '/test-netsends.pd']
+			'max': 1,
+			'flags': {
+				'noprefs': true,
+				'stderr': true,
+				'nogui': true,
+				'open': __dirname + '/test-netsends.pd'
+			}
 		})
 		.on('listening', function(){
 			result += 'listen, ';
@@ -251,8 +289,12 @@ describe('Port connection', function(){
 		var i = 1;
 
 		var pd = port({
-			read: 8025, // [netsend]
-			flags: ['-noprefs', '-nogui', __dirname + '/test-netsend.pd']
+			'read': 8025, // [netsend]
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-netsend.pd'
+			}
 		});
 
 		// pd.on('error', function(error){});
@@ -282,10 +324,10 @@ describe('Port connection', function(){
 		var pdprocess = null;
 
 		port({
-			read: 8015, // [netsend]
-			write: 8016, // [netreceive]
-			encoding: 'ascii',
-			pd: null // prevents spawning the pd process
+			'read': 8015, // [netsend]
+			'write': 8016, // [netreceive]
+			'encoding': 'ascii',
+			'pd': null // prevents spawning the pd process
 		})
 		.on('listening', function(){
 			var location = ('darwin' == process.platform)
@@ -315,10 +357,14 @@ describe('Port connection', function(){
 	it('should dismiss invalid write data', function(done){
 
 		var pd = port({
-			read: 8015, // [netsend]
-			write: 8016, // [netreceive]
-			encoding: 'ascii',
-			flags: ['-noprefs', '-nogui', __dirname + '/test-net.pd']
+			'read': 8015, // [netsend]
+			'write': 8016, // [netreceive]
+			'encoding': 'ascii',
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-net.pd'
+			}
 		});
 
 		// [netreceive] socket

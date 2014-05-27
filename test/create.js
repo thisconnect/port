@@ -9,7 +9,11 @@ describe('Port create', function(){
 	it('should create a Pd process with -nogui flag and receive data from [print]', function(done){
 
 		var pd = port({
-			flags: ['-noprefs', '-nogui', __dirname + '/test-loadbang.pd']
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-loadbang.pd'
+			}
 		});
 
 		expect(pd).to.be.a(port);
@@ -30,7 +34,12 @@ describe('Port create', function(){
 	it('should repeat the same test but with -path flag', function(done){
 
 		var pd = port({
-			flags: ['-noprefs', '-nogui', '-path', __dirname, 'test-loadbang.pd']
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'path': __dirname,
+				'open': 'test-loadbang.pd'
+			}
 		});
 
 		pd.on('stderr', function(buffer){
@@ -95,36 +104,17 @@ describe('Port create', function(){
 	});
 
 
-	it('should accept an object for flags', function(done){
-
-		var pd = port({
-			flags: {
-				'-noprefs': true,
-				'-nogui': true,
-				'-path': __dirname,
-				'-open': 'test-loadbang.pd'
-			}
-		});
-
-		pd.on('stderr', function(buffer){
-			expect(buffer).to.be.an('object');
-			expect(buffer.toString()).to.be.ok();
-			expect(buffer.toString().trim()).to.be('print: bang');
-			pd.destroy();
-			done();
-		});
-
-		pd.create();
-
-	});
-
-
 	it('should create and destroy 20 times in a row', function(done){
 
 		var i = 1;
 
 		var pd = port({
-			flags: ['-noprefs', '-nogui', __dirname + '/test-loadbang.pd']
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'stderr': true,
+				'open': __dirname + '/test-loadbang.pd'
+			}
 		});
 
 		pd.on('stderr', function(buffer){
@@ -145,7 +135,12 @@ describe('Port create', function(){
 	it('should create a Pd process with -stderr flag and receive data from [print]', function(done){
 
 		var pd = port({
-			flags: ['-noprefs', '-nogui', '-stderr', __dirname + '/test-loadbang.pd']
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'stderr': true,
+				'open': __dirname + '/test-loadbang.pd'
+			}
 		});
 
 		pd.on('stderr', function(buffer){
@@ -173,11 +168,12 @@ describe('Port create', function(){
 		var received = '';
 
 		port({
-			flags: [
-				'-noprefs', '-nogui',
-				'-send', 'node hi Pd!',
-				'-open', __dirname + '/test-receive.pd'
-			]
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'send': 'node hi Pd!',
+				'open': __dirname + '/test-receive.pd'
+			}
 		})
 		.on('stderr', function(buffer){
 			received += buffer.toString();
@@ -211,9 +207,13 @@ describe('Port create', function(){
 
 
 		port({
-			flags: ['-noprefs', '-nogui', '-stderr',
-				'-send', 'node ' + data,
-				'-open', __dirname + '/test-receive.pd']
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'stderr': true,
+				'send': 'node ' + data,
+				'open': __dirname + '/test-receive.pd'
+			}
 		})
 		.on('stderr', function(buffer){
 			received += buffer.toString();
@@ -238,11 +238,13 @@ describe('Port create', function(){
 			};
 
 		port({
-			flags: [
-				'-noprefs', '-nogui', '-stderr',
-				'-send', 'in1 ' + in1.toString() + ';in2 ' + in2.toString(),
-				'-open', __dirname + '/test-receivers.pd'
-			]
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'stderr': true,
+				'send': 'in1 ' + in1.toString() + ';in2 ' + in2.toString(),
+				'open': __dirname + '/test-receivers.pd'
+			}
 		})
 		.on('stderr', function(buffer){
 			var packet = buffer.toString().split('\n');
@@ -273,11 +275,11 @@ describe('Port create', function(){
 
 		var pd = port({
 			'flags': {
-				'-noprefs': true,
-				'-nogui': true,
-				'-stderr': true,
-				'-path': __dirname + '/test-path',
-				'-open': 'test-loadbang2.pd'
+				'noprefs': true,
+				'nogui': true,
+				'stderr': true,
+				'path': __dirname + '/test-path',
+				'open': 'test-loadbang2.pd'
 			}
 		});
 

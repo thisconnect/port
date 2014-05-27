@@ -55,10 +55,12 @@ var server = http.createServer(function(req, res){
 
 // port setup
 var pd = port({
-	read: 8125, // [netsend]
-	write: 8126, // [netreceive]
-	flags: ['-noprefs', // '-stderr', '-nogui',
-	dir + '/wavetable.pd']
+	'read': 8125, // [netsend]
+	'write': 8126, // [netreceive]
+	'flags': {
+		'noprefs': true, // '-stderr', '-nogui',
+		'open': dir + '/wavetable.pd'
+	}
 })
 .on('stderr', function(buffer){
 	console.log(buffer.toString());

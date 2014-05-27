@@ -62,10 +62,14 @@ io.on('connection', function(socket){
 	// create the port
 
 	var pd = port({
-		read: 8115, // [netsend]
-		write: 8116, // [netreceive]
-		encoding: 'ascii',
-		flags: ['-noprefs', '-nogui', dir + '/audioin.pd']
+		'read': 8115, // [netsend]
+		'write': 8116, // [netreceive]
+		'encoding': 'ascii',
+		'flags': {
+			'noprefs': true,
+			'nogui': true,
+			'open': dir + '/audioin.pd'
+		}
 	})
 	.on('connect', function(){
 		this.write('run 1;\n');
