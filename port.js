@@ -23,7 +23,7 @@ Port.prototype.setOptions = function(options){
 		pd: (('darwin' == process.platform)
 			? '/Applications/Pd-0.45-5-64bit.app/Contents/Resources/bin/pd'
 			: 'pd'),
-		flags: {} // {'-nogui': true, '-stderr': true, '-open': './port.pd'}
+		flags: {} // {'nogui': true, 'stderr': true, 'open': './port.pd'}
 	};
 
 	for (var key in options){
@@ -57,7 +57,7 @@ Port.prototype.parseFlags = function(flags){
 
 	array.push('-open', flags['-open'] || flags['open']);
 	return array;
-}
+};
 
 // start pd process
 Port.prototype.spawn = function(){
@@ -71,7 +71,7 @@ Port.prototype.spawn = function(){
 };
 
 Port.prototype.isRunning = function(){
-	return (this.child && !this.child.killed) || false;
+	return (!!this.child && !this.child.killed) || false;
 };
 
 // on [netsend] connection
