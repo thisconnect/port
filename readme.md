@@ -148,6 +148,13 @@ pd.setOptions({
 });
 ```
 
+
+### Method: Port.isRunning
+
+Returns true when the instance is connected and it is safe to send data with the `write` method.
+
+
+
 ### Method: Port.parseFlags
 
 Internal method, eventually useful for debugging. Turns flags object into an array. Adds dash prefix, omits flags that are falsy, supports path array, ensures -path and -open to be at the last position.

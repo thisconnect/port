@@ -6,15 +6,17 @@ var port = require('../');
 describe('Port Events', function(){
 
 
-	it('should test the scope of all event callbacks', function(done){
+	it('should test the scope of all event callbacks and check Port.isRunning', function(done){
 
 		var pd = port({
 			'read': 8015, // [netsend]
 			'write': 8016, // [netreceive]
+			'basepath': __dirname,
 			'flags': {
 				'noprefs': true,
 				'nogui': true,
-				'open': __dirname + '/test-net.pd'
+				'stderr': true,
+				'open': 'test-net.pd'
 			}
 		});
 
@@ -22,18 +24,21 @@ describe('Port Events', function(){
 		pd.on('listening', function(){
 			expect(this).to.be(pd);
 			expect(this).to.be.a(port);
+			expect(pd.isRunning()).to.be(false);
 		});
 
 		// [netsend] socket
 		pd.on('connection', function(socket){
 			expect(this).to.be(pd);
 			expect(this).to.be.a(port);
+			expect(pd.isRunning()).to.be(false);
 		});
 
 		// [netreceive] socket
 		pd.on('connect', function(socket){
 			expect(this).to.be(pd);
 			expect(this).to.be.a(port);
+			expect(pd.isRunning()).to.be(true);
 
 			// sends data to [netreceive]
 			this.write('send Hello Pd!;\n');
@@ -49,25 +54,34 @@ describe('Port Events', function(){
 		pd.on('data', function(data){
 			expect(this).to.be(pd);
 			expect(this).to.be.a(port);
+			expect(pd.isRunning()).to.be(true);
 
 			// end pd
-			this.destroy()
+			this.destroy();
+
+			expect(pd.isRunning()).to.be(false);
 		});
 
 		// fired after destroy completes
 		pd.on('destroy', function(){
 			expect(this).to.be(pd);
 			expect(this).to.be.a(port);
+			expect(pd.isRunning()).to.be(false);
 		});
 
 		// fires after pd process ends
 		pd.on('exit', function(code, signal){
 			expect(this).to.be(pd);
 			expect(this).to.be.a(port);
+			expect(pd.isRunning()).to.be(false);
 			done();
 		});
 
+		expect(pd.isRunning()).to.be(false);
+
 		pd.create();
+
+		expect(pd.isRunning()).to.be(false);
 
 	});
 

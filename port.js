@@ -71,7 +71,7 @@ Port.prototype.spawn = function(){
 };
 
 Port.prototype.isRunning = function(){
-	return (!!this.child && !this.child.killed) || false;
+	return (!!this.child && !this.child.killed && !!this.sender && this.sender.writable) || false;
 };
 
 // on [netsend] connection
