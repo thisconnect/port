@@ -51,7 +51,7 @@ describe('Port Flags', function(){
 	it('should not add -path if basepath and path are missing', function(done){
 
 		expect(
-			port.prototype.parseFlags(['-noprefs', '-open', __dirname + 'test-loadbang.pd'])
+			['-noprefs', '-open', __dirname + 'test-loadbang.pd']
 		).to.eql(
 			port.prototype.parseFlags({
 				'-noprefs': true,
