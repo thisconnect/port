@@ -333,4 +333,76 @@ describe('Port connection', function(){
 
 	});
 
+
+	it('should allow changing options on the same instance', function(done){
+
+		var pd = port({
+			'read': 8015, // [netsend]
+			'write': 8016, // [netreceive]
+			'encoding': 'ascii',
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'open': __dirname + '/test-net.pd'
+			}
+		});
+
+		pd.on('connection', function(socket){
+			expect(socket).to.be.an('object');
+		});
+
+		pd.on('connect', function(socket){
+			expect(socket).to.be.an('object');
+			socket.write('send Hello Pd (1)!;\n');
+		});
+
+		// receives data from [netsend]
+		pd.on('data', function(data){
+			expect(data.toString()).to.be.a('string');
+			expect(data.toString()).to.be('Hello Pd (1)!;\n');
+			pd.removeAllListeners('connect');
+			pd.removeAllListeners('data');
+			pd.destroy();
+		});
+
+		// second test
+		pd.once('destroy', function(){
+			var received = '';
+
+			expect(this).to.be.a(port);
+
+			pd.on('connect', function(socket){
+				// sends data to [netreceive]
+				socket.write('send Hello Pd (2)!;\n');
+			});
+
+			// receives data from [netsend]
+			pd.on('data', function(data){
+				expect(data).to.be.an('object');
+				expect(data).to.have.property('length');
+				expect(data.toString()).to.be('Hello Pd (2)!;\n');
+				pd.destroy();
+				done();
+			});
+
+			pd.setOptions({
+				'read': 8015, // [netsend]
+				'write': 8016, // [netreceive]
+				'encoding': false,
+				'basepath': __dirname,
+				'flags': {
+					'noprefs': true,
+					'nogui': true,
+					'open': 'test-net.pd'
+				}
+			});
+
+			pd.create();
+
+		});
+
+		pd.create();
+
+	});
+
 });

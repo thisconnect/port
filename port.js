@@ -13,39 +13,53 @@ Port.prototype = Object.create(event.prototype);
 
 
 Port.prototype.setOptions = function(options){
-	this.options = {
-		host: options.host || 'localhost',
-		read: options.read || null, // [connect <port>( -> [netsend]
-		write: options.write || null, // [netreceive <port>]
-		encoding: options.encoding || null, // 'ascii', 'utf8', 'base64', 'hex'
-		max: ('max' in options) ? options.max : 1, // max connections
-		pd: ('pd' in options) ? options.pd
-			: (('darwin' == process.platform)
-				? '/Applications/Pd-0.45-5-64bit.app/Contents/Resources/bin/pd'
-				: 'pd'),
-		flags: options.flags || [] // ['-noprefs', '-stderr', './port.pd']
+	if (!this.options) this.options = {
+		host: 'localhost',
+		read: null, // [connect <port>( -> [netsend]
+		write: null, // [netreceive <port>]
+		encoding: null, // 'ascii', 'utf8', 'base64', 'hex'
+		max: 1, // max connections
+		basepath: '', // prefix -path flags
+		pd: (('darwin' == process.platform)
+			? '/Applications/Pd-0.45-5-64bit.app/Contents/Resources/bin/pd'
+			: 'pd'),
+		flags: {} // {'-nogui': true, '-stderr': true, '-open': './port.pd'}
 	};
+
+	for (var key in options){
+		this.options[key] = options[key];
+	}
+
+	return this;
 };
 
 Port.prototype.parseFlags = function(flags){
-	var array = [];
+	var array = [],
+		basepath = (this.options && this.options.basepath) || '';
+
 	if (Array.isArray(flags)) return flags;
 	for (var f in flags){
-		if (/path|open/.test(f) || !flags[f]) continue;
+		if (/debug|path|open/.test(f) || !flags[f]) continue;
 		array.push(/^-/.test(f) ? f : '-' + f);
 		if (typeof flags[f] != 'boolean') array.push(flags[f]);
 	}
-	var path = flags['-path'] || flags['path'];
-	if (!Array.isArray(path)) array.push('-path', path);
+
+	var path = flags['-path'] || flags['path'] || '';
+
+	if (!!basepath && !(/\/$/.test(basepath))) basepath += '/';
+
+	if (!Array.isArray(path)) array.push('-path', basepath + path);
 	else for (var i = 0, l = path.length; i < l; ++i){
-		array.push('-path', path[i]);
+		array.push('-path', basepath + path[i]);
 	}
+
 	array.push('-open', flags['-open'] || flags['open']);
 	return array;
 }
 
 // start pd process
 Port.prototype.spawn = function(){
+	if (this.options.debug) console.log(this.options.pd, this.parseFlags(this.options.flags));
 	if (!this.options.pd) return this;
 	var child = this.child = spawn(this.options.pd, this.parseFlags(this.options.flags));
 	if (!!this.options.encoding) child.stderr.setEncoding(this.options.encoding);
@@ -89,7 +103,7 @@ Port.prototype.write = function(data){
 
 // start Port
 Port.prototype.create = function(){
-	process.on('exit', this.destroy);
+	process.once('exit', this.destroy);
 	if (!!this.options.write) this.on('connection', this.connect);
 	if (!this.options.read) return this.spawn();
 	this.on('listening', this.spawn);

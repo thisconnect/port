@@ -11,15 +11,25 @@ Example
 var port = require('port');
 
 port({
-	read: 8004,
-	write: 8005,
-	flags: ['-noprefs', '-send', 'pd dsp 1, dsp 0', './examples/simple/port.pd']
+	'read': 8004,
+	'write': 8005,
+	'basepath': __dirname,
+	'flags': {
+		'nogui': true,
+		'stderr': true,
+		'send': 'pd dsp 1, dsp 0',
+		'path': 'relative/to/basepath',
+		'open': 'patch.pd'
+	}
 })
 .on('connect', function(){
-	this.write('Hello Pd!;\n');
+	this.write('Hello [netreceive]!;\n');
 })
 .on('data', function(data){
-	console.log(data);
+	console.log('data receiving from [netsend]', data);
+})
+.on('stderr', function(buffer){
+	console.log(buffer.toString());
 })
 .create();
 ```
@@ -48,6 +58,8 @@ var pd = new Port(options);
 
 The `new` keyword is optional.
 
+
+
 ##### Options
 
   - `host` - (string) The domain of the Pd process. Defaults to localhost.
@@ -60,13 +72,15 @@ The `new` keyword is optional.
   [nodejs.org/api/stream.html#stream_stream_setencoding_encoding](http://nodejs.org/api/stream.html#stream_stream_setencoding_encoding)
   Defaults to null.
   - `max` - (number) Limits amount of incoming connections. Defaults to 1.
+  - `basepath` - (string) -path flags are relative to basepath. Supports only flags object, but not flags array.
   - `pd` - (string) The command or location to spawn the Pd process. 
   Defaults to an absolute path to the Pd binary on OS X.
   Defaults to 'pd' on Linux.
-  - `flags` - (array|object) The command line arguments for the Pd process. 
-  Expects an array of arguments. Read more about Pd's configuration flags on 
+  - `debug` - (boolean) log parsed startup flags before spawning Pd.
+  - `flags` - (object) The command line arguments for the Pd process. 
+  Expects an object of arguments. Read more about Pd's configuration flags on 
   [crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4](http://crca.ucsd.edu/~msp/Pd_documentation/x3.htm#s4) . 
-  Defaults to [].
+  Defaults to {}. Array support is deprecated.
 
 
 
@@ -80,7 +94,7 @@ Methods
 2. Listens for an incoming socket connection.
 3. Connects to on the write port.
 
-Each of the 3 steps are individually executed depending on the configuraion options.
+Each of the 3 steps are individually executed depending on the configuration.
 
 ```js
 pd.create();
@@ -100,7 +114,7 @@ pd.destroy();
 
 ### Method: Port.write
 
-Sends a paket containing one or many messages to Pd's [netreceive].
+Sends a packet containing one or many messages to Pd's [netreceive].
 
 WARNING: write does not check if the write socket is ready and may error!
 
@@ -108,10 +122,35 @@ WARNING: write does not check if the write socket is ready and may error!
 pd.write('Hello Pd!;\n');
 ```
 
+
+
+### Method: Port.setOptions
+
+Reconfigure an instance, changes only take effect after destroy and create methods have been called.
+
+
 ##### Arguments
 
-1. Data (string) - the packet to send to the write socket.
+1. Data (object) - set configuration on an existing instance.
 
+```js
+pd.setOptions({
+	'read': 12345,
+	'write': 12346,
+	'basepath': __dirname,
+	'flags': {
+		'noprefs': true,
+		'nogui': true,
+		'stderr': true,
+		'path': 'relatvie/path/to/dir',
+		'open': 'patch.pd'
+	}
+});
+```
+
+### Method: Port.parseFlags
+
+Internal method, eventually useful for debugging. Turns flags object into an array. Adds dash prefix, omits flags that are falsy, supports path array, ensures -path and -open to be at the last position.
 
 
 Events
@@ -202,6 +241,8 @@ pd.on('destroy', function(){ });
 
 Tests
 -----
+
+If tests fail, the child process may be manually terminated with `killall pd`. 
 
 ```bash
 make test

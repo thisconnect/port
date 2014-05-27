@@ -33,7 +33,54 @@ describe('Port create', function(){
 			flags: ['-noprefs', '-nogui', '-path', __dirname, 'test-loadbang.pd']
 		});
 
-		expect(pd).to.be.a(port);
+		pd.on('stderr', function(buffer){
+			expect(buffer).to.be.an('object');
+			expect(buffer.toString()).to.be.ok();
+			expect(buffer.toString().trim()).to.be('print: bang');
+			pd.destroy();
+			done();
+		});
+
+		pd.create();
+
+	});
+
+	it('should use basepath for prefixing -path flags', function(done){
+
+		var pd = port({
+			'basepath': __dirname,
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'stderr': true,
+				'path': 'test-path',
+				'open': 'test-loadbang2.pd'
+			}
+		});
+
+		pd.on('stderr', function(buffer){
+			expect(buffer).to.be.an('object');
+			expect(buffer.toString()).to.be.ok();
+			expect(buffer.toString().trim()).to.be('print: bang');
+			pd.destroy();
+			done();
+		});
+
+		pd.create();
+
+	});
+
+	it('should use basepath without -path flags', function(done){
+
+		var pd = port({
+			'basepath': __dirname + '/test-path',
+			'flags': {
+				'noprefs': true,
+				'nogui': true,
+				'stderr': true,
+				'open': 'test-loadbang2.pd'
+			}
+		});
 
 		pd.on('stderr', function(buffer){
 			expect(buffer).to.be.an('object');
@@ -58,8 +105,6 @@ describe('Port create', function(){
 				'-open': 'test-loadbang.pd'
 			}
 		});
-
-		expect(pd).to.be.a(port);
 
 		pd.on('stderr', function(buffer){
 			expect(buffer).to.be.an('object');
@@ -102,8 +147,6 @@ describe('Port create', function(){
 		var pd = port({
 			flags: ['-noprefs', '-nogui', '-stderr', __dirname + '/test-loadbang.pd']
 		});
-
-		expect(pd).to.be.a(port);
 
 		pd.on('stderr', function(buffer){
 			expect(buffer).to.be.an('object');
@@ -222,6 +265,60 @@ describe('Port create', function(){
 			}
 		})
 		.create();
+
+	});
+
+
+	it('should allow setting different options on the same instance', function(done){
+
+		var pd = port({
+			'flags': {
+				'-noprefs': true,
+				'-nogui': true,
+				'-stderr': true,
+				'-path': __dirname + '/test-path',
+				'-open': 'test-loadbang2.pd'
+			}
+		});
+
+		// first test
+		pd.on('stderr', function(buffer){
+
+			expect(buffer.toString().trim()).to.be('print: bang');
+			pd.removeAllListeners('stderr');
+			pd.destroy();
+
+		});
+
+		// second test
+		pd.once('destroy', function(){
+			var received = '';
+
+			pd.on('stderr', function(buffer){
+				received += buffer.toString();
+				if (!!received.match(/\n$/)){
+					expect(received).to.be('print: hi Pd!\n');
+					expect(received.toString().slice(0, -1)).to.be('print: hi Pd!');
+					pd.destroy();
+					done();
+				}
+			});
+
+			pd.setOptions({
+				'basepath': __dirname,
+				'flags': {
+					'noprefs': true,
+					'nogui': true,
+					'send': 'node hi Pd!',
+					'open': 'test-receive.pd'
+				}
+			});
+
+			pd.create();
+
+		});
+
+		pd.create();
 
 	});
 
