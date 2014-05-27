@@ -46,11 +46,13 @@ Port.prototype.parseFlags = function(flags){
 
 	var path = flags['-path'] || flags['path'] || '';
 
-	if (!!basepath && !(/\/$/.test(basepath))) basepath += '/';
-
-	if (!Array.isArray(path)) array.push('-path', basepath + path);
-	else for (var i = 0, l = path.length; i < l; ++i){
-		array.push('-path', basepath + path[i]);
+	if (!!basepath || !!path){
+		if (!!basepath && !(/\/$/.test(basepath))) basepath += '/';
+		
+		if (!Array.isArray(path)) array.push('-path', basepath + path);
+		else for (var i = 0, l = path.length; i < l; ++i){
+			array.push('-path', basepath + path[i]);
+		}
 	}
 
 	array.push('-open', flags['-open'] || flags['open']);
@@ -66,6 +68,10 @@ Port.prototype.spawn = function(){
 	child.on('exit', this.emit.bind(this, 'exit'));
 	child.stderr.on('data', this.emit.bind(this, 'stderr'));
 	return this;
+};
+
+Port.prototype.isRunning = function(){
+	return (this.child && !this.child.killed) || false;
 };
 
 // on [netsend] connection
