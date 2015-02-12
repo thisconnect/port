@@ -1,6 +1,6 @@
 {
   "name": "port",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "author": "Enrique Erne (http://mild.ch/)",
   "description": "Spawn Pd (Pure Data) and communicate through TCP sockets",
   "keywords": [
