@@ -9,16 +9,19 @@ var path = require('path'),
 
 var dir = path.dirname(path.relative(process.cwd(), process.argv[1]));
 
-var interface = require('os').networkInterfaces();
+var network = require('os').networkInterfaces();
 
-Object.keys(interface).forEach(function(network){
-	var external = interface[network].filter(function(i){
-		return (!i.internal && i.family == 'IPv4');
-	});
-	if (!!external[0]) interface = external[0].address;
+Object.keys(network).forEach(function(n){
+	console.log(network[n]);
+	if (Array.isArray(network[n])){
+		var external = network[n].filter(function(i){
+			return (!i.internal && i.family == 'IPv4');
+		});
+		if (!!external[0]) network = external[0].address;
+	}
 });
 
-console.log('\nbrowse to http://' + interface + ':8118');
+console.log('\nbrowse to http://' + network + ':8118');
 
 
 
@@ -79,9 +82,8 @@ var io = socketio.listen(server, {
 io.on('connection', function(socket){
 	socket.on('data', function(x, y){
 		//console.log('position', x, y);
-		
+
 		// x, y to FUDI
 		pd.write([x, y].join(' ') + ';\n');
 	});
 });
-
